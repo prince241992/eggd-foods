@@ -1,5 +1,6 @@
 
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const AboutSection = () => {
   return (
@@ -29,7 +30,7 @@ const AboutSection = () => {
             </div>
             
             <p className="text-gray-600">
-              egg'd foods began with a simple mission: to showcase the incredible versatility of eggs through delicious, chef-crafted recipes delivered straight to your door.
+              Egg'd Foods began with a simple mission: to showcase the incredible versatility of eggs through delicious, chef-crafted recipes delivered straight to your door.
             </p>
             <p className="text-gray-600">
               Our team of culinary experts brings decades of experience in creating exceptional egg-based dishes, combining classic techniques with innovative flavors. Every meal is prepared fresh daily in our state-of-the-art cloud kitchen.
@@ -52,7 +53,9 @@ const AboutSection = () => {
               ))}
             </div>
             
-            <Button className="bg-sweet-600 hover:bg-sweet-700">Learn More About Us</Button>
+            <Link to="/about">
+              <Button className="bg-sweet-600 hover:bg-sweet-700">Learn More About Us</Button>
+            </Link>
           </div>
         </div>
       </div>

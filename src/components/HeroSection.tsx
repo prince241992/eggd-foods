@@ -1,5 +1,6 @@
 
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   return (
@@ -11,13 +12,15 @@ const HeroSection = () => {
             <span className="gradient-text">Egg-cellent Food</span> Delivered To Your Door
           </h1>
           <p className="text-gray-600 text-lg">
-            Discover the versatility of eggs with our chef-crafted recipes. Made fresh daily in our cloud kitchen, delivered straight to you.
+            Discover the versatility of eggs with our chef-crafted recipes. Made fresh daily in our Egg'd Foods cloud kitchen, delivered straight to you.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Button className="bg-sweet-600 hover:bg-sweet-700 text-lg h-12 px-8">Order Now</Button>
-            <Button variant="outline" className="border-sweet-500 text-sweet-600 hover:bg-sweet-50 text-lg h-12 px-8">
-              View Menu
-            </Button>
+            <Link to="/menu">
+              <Button variant="outline" className="border-sweet-500 text-sweet-600 hover:bg-sweet-50 text-lg h-12 px-8">
+                View Menu
+              </Button>
+            </Link>
           </div>
         </div>
         <div className="relative">

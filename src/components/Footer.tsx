@@ -8,8 +8,8 @@ const Footer = () => {
       <div className="container-custom">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="space-y-4">
-            <h3 className="text-xl font-bold text-gray-800 font-display">SweetHub</h3>
-            <p className="text-gray-600">Serving authentic Indian sweets and snacks from our cloud kitchen to your doorstep.</p>
+            <h3 className="text-xl font-bold text-gray-800 font-display">Egg'd Foods</h3>
+            <p className="text-gray-600">Serving delicious egg-based dishes from our cloud kitchen to your doorstep.</p>
             <div className="flex space-x-4">
               <a href="#" className="text-gray-600 hover:text-sweet-600">
                 <Facebook size={20} />
@@ -36,10 +36,10 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold text-gray-800 mb-4">Categories</h4>
             <ul className="space-y-2">
-              <li><a href="#" className="text-gray-600 hover:text-sweet-600">Sweets</a></li>
-              <li><a href="#" className="text-gray-600 hover:text-sweet-600">Snacks</a></li>
-              <li><a href="#" className="text-gray-600 hover:text-sweet-600">Gift Boxes</a></li>
-              <li><a href="#" className="text-gray-600 hover:text-sweet-600">Seasonal Specials</a></li>
+              <li><a href="#" className="text-gray-600 hover:text-sweet-600">Omelettes</a></li>
+              <li><a href="#" className="text-gray-600 hover:text-sweet-600">Bhurji</a></li>
+              <li><a href="#" className="text-gray-600 hover:text-sweet-600">Main Course</a></li>
+              <li><a href="#" className="text-gray-600 hover:text-sweet-600">Bread & Rice</a></li>
             </ul>
           </div>
           
@@ -48,14 +48,14 @@ const Footer = () => {
             <address className="not-italic text-gray-600">
               <p>123 Flavor Street</p>
               <p>Tasteville, TX 75001</p>
-              <p className="mt-2">Email: hello@sweethub.com</p>
+              <p className="mt-2">Email: hello@eggdfoods.com</p>
               <p>Phone: (123) 456-7890</p>
             </address>
           </div>
         </div>
         
         <div className="border-t border-cream-200 mt-12 pt-8 text-center text-gray-600">
-          <p>&copy; {new Date().getFullYear()} SweetHub. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Egg'd Foods. All rights reserved.</p>
         </div>
       </div>
     </footer>
