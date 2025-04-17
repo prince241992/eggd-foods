@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import { useState } from "react";
 import ProductCard from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
-import { Egg, UtensilsCrossed, Flame, PanelTop, Bread, Rice, Plus } from "lucide-react";
+import { Egg, UtensilsCrossed, Flame, PanelTop, Cookie, Wheat, Plus } from "lucide-react";
 
 const menuCategories = [
   { id: "all", name: "All Items", icon: <UtensilsCrossed size={18} /> },
@@ -12,8 +12,8 @@ const menuCategories = [
   { id: "starter", name: "Starters", icon: <UtensilsCrossed size={18} /> },
   { id: "bhurji", name: "Bhurji", icon: <Flame size={18} /> },
   { id: "maincourse", name: "Main Course", icon: <PanelTop size={18} /> },
-  { id: "bread", name: "Bread", icon: <Bread size={18} /> },
-  { id: "rice", name: "Rice", icon: <Rice size={18} /> },
+  { id: "bread", name: "Bread", icon: <Cookie size={18} /> },
+  { id: "rice", name: "Rice", icon: <Wheat size={18} /> },
   { id: "extras", name: "Extras", icon: <Plus size={18} /> },
 ];
 
