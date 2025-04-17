@@ -16,7 +16,7 @@ const About = () => {
               About <span className="gradient-text">Us</span>
             </h1>
             <p className="text-gray-600 text-center max-w-2xl mx-auto">
-              Learn more about our journey, our values, and our commitment to authentic Indian sweets.
+              Learn more about our journey, our values, and our passion for creating exceptional egg dishes.
             </p>
           </div>
         </div>

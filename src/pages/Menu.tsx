@@ -15,7 +15,7 @@ const Menu = () => {
               Our <span className="gradient-text">Menu</span>
             </h1>
             <p className="text-gray-600 text-center max-w-2xl mx-auto mb-12">
-              Explore our wide range of authentic Indian sweets and snacks, crafted with traditional recipes and premium ingredients.
+              Explore our wide range of delicious egg-based recipes, crafted with farm-fresh ingredients and culinary expertise.
             </p>
           </div>
         </div>
