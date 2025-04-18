@@ -17,7 +17,7 @@ interface ProductCardProps {
   className?: string;
 }
 
-const ProductCard = ({ name, description, price, image, popular, className }: ProductCardProps) => {
+const ProductCard = ({ name, description, price, image, popular, addOns, className }: ProductCardProps) => {
   return (
     <div className={cn(
       "bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300",
@@ -50,4 +50,3 @@ const ProductCard = ({ name, description, price, image, popular, className }: Pr
 };
 
 export default ProductCard;
-

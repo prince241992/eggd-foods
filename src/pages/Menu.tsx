@@ -23,7 +23,18 @@ const standardAddOns = [
   { name: "Boiled Grated Egg", price: "₹20" }
 ];
 
-const menuItems = [
+interface MenuItem {
+  id: number;
+  name: string;
+  description: string;
+  price: string;
+  image: string;
+  category: string;
+  addOns: { name: string; price: string; }[];
+  popular?: boolean;
+}
+
+const menuItems: MenuItem[] = [
   // Omelettes
   {
     id: 1,
@@ -32,7 +43,8 @@ const menuItems = [
     price: "₹55",
     image: "https://images.unsplash.com/photo-1510693206972-df098062cb71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1064&q=80",
     category: "omelette",
-    addOns: standardAddOns
+    addOns: standardAddOns,
+    popular: true
   },
   {
     id: 2,
