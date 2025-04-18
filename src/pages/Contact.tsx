@@ -63,7 +63,7 @@ const Contact = () => {
                     <MapPin className="text-sweet-600 mt-1" />
                     <div>
                       <h3 className="font-semibold text-gray-800">Our Location</h3>
-                      <p className="text-gray-600">123 Flavor Street, Tasteville, TX 75001</p>
+                      <p className="text-gray-600">Near Radission Hotel, Vijaynagar, Indore</p>
                     </div>
                   </div>
                   
@@ -71,15 +71,15 @@ const Contact = () => {
                     <Mail className="text-sweet-600 mt-1" />
                     <div>
                       <h3 className="font-semibold text-gray-800">Email Us</h3>
-                      <p className="text-gray-600">hello@sweethub.com</p>
+                      <p className="text-gray-600">contactus@eggsfoods.com</p>
                     </div>
                   </div>
                   
                   <div className="flex items-start space-x-4">
                     <Phone className="text-sweet-600 mt-1" />
                     <div>
-                      <h3 className="font-semibold text-gray-800">Call Us</h3>
-                      <p className="text-gray-600">(123) 456-7890</p>
+                      <h3 className="font-semibold text-gray-800">Call Us / WhatsApp</h3>
+                      <p className="text-gray-600">9898116290</p>
                     </div>
                   </div>
                 </div>
@@ -93,6 +93,8 @@ const Contact = () => {
                     <p className="text-gray-600">10:00 AM - 7:00 PM</p>
                     <p className="text-gray-600">Sunday:</p>
                     <p className="text-gray-600">10:00 AM - 6:00 PM</p>
+                    <p className="text-gray-600 font-medium mt-2">Cash on Delivery:</p>
+                    <p className="text-gray-600 font-medium mt-2">8:00 AM - 6:00 PM</p>
                   </div>
                 </div>
               </div>

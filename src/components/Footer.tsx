@@ -46,10 +46,10 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold text-gray-800 mb-4">Contact</h4>
             <address className="not-italic text-gray-600">
-              <p>123 Flavor Street</p>
-              <p>Tasteville, TX 75001</p>
-              <p className="mt-2">Email: hello@eggdfoods.com</p>
-              <p>Phone: (123) 456-7890</p>
+              <p>Near Radission Hotel</p>
+              <p>Vijaynagar, Indore</p>
+              <p className="mt-2">Email: contactus@eggsfoods.com</p>
+              <p>Phone: 9898116290</p>
             </address>
           </div>
         </div>
