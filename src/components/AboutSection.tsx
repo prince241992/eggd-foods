@@ -23,20 +23,20 @@ const AboutSection = () => {
           
           <div className="space-y-6">
             <div>
-              <h2 className="text-sweet-700 text-lg font-medium uppercase tracking-wider">About Us</h2>
+              <h2 className="text-sweet-700 text-lg font-medium uppercase tracking-wider">Our Story</h2>
               <h3 className="text-3xl md:text-4xl font-bold font-display mt-2">
-                Our Egg-citing <span className="text-spice-600">Journey</span>
+                We Make Eggs <span className="text-spice-600">Extraordinary! 🚀</span>
               </h3>
             </div>
             
             <p className="text-gray-600">
-              Egg'd Foods began with a simple mission: to showcase the incredible versatility of eggs through delicious, chef-crafted recipes delivered straight to your door.
+              Welcome to Egg'd Foods, where we transform ordinary eggs into extraordinary experiences! We're not just another takeaway - we're your partners in egg-venture, crafting mind-blowing dishes that'll make your taste buds dance! 
             </p>
             <p className="text-gray-600">
-              Our team of culinary experts brings decades of experience in creating exceptional egg-based dishes, combining classic techniques with innovative flavors. Every meal is prepared fresh daily in our state-of-the-art cloud kitchen.
+              Our team of food artists brings decades of culinary expertise to create egg dishes that are anything but basic. Every creation is prepared fresh with premium ingredients and a whole lot of passion.
             </p>
             <p className="text-gray-600">
-              We source only the finest ingredients, starting with farm-fresh, free-range eggs. From the seasonal produce we select to the artisanal breads we bake, every component is chosen with care to create dishes that are nutritious, delicious, and satisfying.
+              From farm-fresh eggs to artisanal breads and premium spices, we source only the finest ingredients. Because when it comes to your food experience, we don't believe in compromises! 
             </p>
             
             <div className="grid grid-cols-2 gap-4 pt-4">

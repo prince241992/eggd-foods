@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
@@ -7,12 +6,12 @@ const HeroSection = () => {
     <div className="relative overflow-hidden bg-gradient-to-r from-cream-50 to-cream-100 py-16 md:py-24">
       <div className="container-custom grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
         <div className="space-y-6 max-w-lg">
-          <span className="inline-block bg-sweet-100 text-sweet-800 px-4 py-1 rounded-full text-sm font-medium">Gourmet Egg Recipes</span>
+          <span className="inline-block bg-sweet-100 text-sweet-800 px-4 py-1 rounded-full text-sm font-medium">Epic Egg Adventures! 🍳</span>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display leading-tight">
-            <span className="gradient-text">Egg-cellent Food</span> Delivered To Your Door
+            <span className="gradient-text">Egg'd <span className="mx-1">Foods</span></span> Your Craving, Our Creation!
           </h1>
           <p className="text-gray-600 text-lg">
-            Discover the versatility of eggs with our chef-crafted recipes. Made fresh daily in our Egg'd Foods cloud kitchen, delivered straight to you.
+            Level up your meals with our insanely delicious egg creations! From classic breakfast vibes to mind-blowing fusion dishes, we're here to satisfy your egg-venture cravings. 🔥
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Button className="bg-sweet-600 hover:bg-sweet-700 text-lg h-12 px-8">Order Now</Button>

@@ -1,4 +1,3 @@
-
 import { Facebook, Instagram, Twitter } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -8,8 +7,8 @@ const Footer = () => {
       <div className="container-custom">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="space-y-4">
-            <h3 className="text-xl font-bold text-gray-800 font-display">Egg'd Foods</h3>
-            <p className="text-gray-600">Serving delicious egg-based dishes from our cloud kitchen to your doorstep.</p>
+            <h3 className="text-xl font-bold text-gray-800 font-display">Egg'd <span className="mx-1">Foods</span></h3>
+            <p className="text-gray-600">Your go-to virtual restaurant for the most epic egg creations! Serving up mind-blowing flavors straight to your doorstep. 🍳✨</p>
             <div className="flex space-x-4">
               <a href="#" className="text-gray-600 hover:text-sweet-600">
                 <Facebook size={20} />
@@ -49,7 +48,7 @@ const Footer = () => {
               <p>Near Radission Hotel</p>
               <p>Vijaynagar, Indore</p>
               <p className="mt-2">Email: contactus@eggsfoods.com</p>
-              <p>Phone: 9898116290</p>
+              <p>Phone & WhatsApp: 9898116290</p>
             </address>
           </div>
         </div>
