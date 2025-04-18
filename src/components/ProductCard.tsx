@@ -17,7 +17,7 @@ interface ProductCardProps {
   className?: string;
 }
 
-const ProductCard = ({ name, description, price, image, popular, addOns, className }: ProductCardProps) => {
+const ProductCard = ({ name, description, price, image, popular, className }: ProductCardProps) => {
   return (
     <div className={cn(
       "bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300",
@@ -41,19 +41,6 @@ const ProductCard = ({ name, description, price, image, popular, addOns, classNa
           <span className="font-semibold text-sweet-600">{price}</span>
         </div>
         <p className="text-gray-600 text-sm mb-4">{description}</p>
-        {addOns && addOns.length > 0 && (
-          <div className="mb-4">
-            <p className="text-sm font-semibold text-gray-700 mb-2">Available Add-ons:</p>
-            <ul className="text-sm text-gray-600">
-              {addOns.map((addon, index) => (
-                <li key={index} className="flex justify-between items-center mb-1">
-                  <span>{addon.name}</span>
-                  <span className="text-sweet-600">{addon.price}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
         <Button variant="outline" className="w-full border-sweet-500 text-sweet-600 hover:bg-sweet-50">
           Add to Cart
         </Button>
