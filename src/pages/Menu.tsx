@@ -1,4 +1,3 @@
-
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useState } from "react";
@@ -21,21 +20,81 @@ const menuItems = [
   // Omelettes
   {
     id: 1,
-    name: "Classic Cheese Omelette",
-    description: "Three eggs with melted cheese and fresh herbs.",
-    price: "$8.99",
+    name: "Simple Omelette",
+    description: "Classic single egg omelette with basic spices and herbs.",
+    price: "₹55",
     image: "https://images.unsplash.com/photo-1510693206972-df098062cb71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1098&q=80",
     category: "omelette",
-    popular: true,
+    addOns: [
+      { name: "Extra Cheese", price: "₹30" },
+      { name: "Extra Vegetables", price: "₹20" },
+      { name: "Extra Spices", price: "₹10" }
+    ]
   },
   {
     id: 2,
-    name: "Veggie Supreme Omelette",
-    description: "Packed with bell peppers, onions, tomatoes, and spinach.",
-    price: "$9.99",
+    name: "Double Omelette",
+    description: "Hearty two-egg omelette with aromatic spices.",
+    price: "₹100",
     image: "https://images.unsplash.com/photo-1565299507177-b0ac66763828?ixlib=rb-4.0.3&auto=format&fit=crop&w=1064&q=80",
     category: "omelette",
-    popular: false,
+    addOns: [
+      { name: "Extra Cheese", price: "₹30" },
+      { name: "Extra Vegetables", price: "₹20" },
+      { name: "Extra Spices", price: "₹10" }
+    ]
+  },
+  {
+    id: 3,
+    name: "Crush Omelette",
+    description: "Unique crushed style two-egg omelette with special seasoning.",
+    price: "₹115",
+    image: "https://images.unsplash.com/photo-1568727349530-1d15e2a3a762?auto=format&fit=crop&w=1064&q=80",
+    category: "omelette",
+    addOns: [
+      { name: "Extra Cheese", price: "₹30" },
+      { name: "Extra Vegetables", price: "₹20" },
+      { name: "Extra Spices", price: "₹10" }
+    ]
+  },
+  {
+    id: 4,
+    name: "Cheese Omelette",
+    description: "Two-egg omelette loaded with premium melted cheese.",
+    price: "₹150",
+    image: "https://images.unsplash.com/photo-1510693206972-df098062cb71?auto=format&fit=crop&w=1064&q=80",
+    category: "omelette",
+    addOns: [
+      { name: "Extra Cheese", price: "₹30" },
+      { name: "Extra Vegetables", price: "₹20" },
+      { name: "Extra Spices", price: "₹10" }
+    ]
+  },
+  {
+    id: 5,
+    name: "Cheese Lapeti Omelette",
+    description: "Special three-egg rolled omelette with generous cheese filling.",
+    price: "₹230",
+    image: "https://images.unsplash.com/photo-1565299507177-b0ac66763828?auto=format&fit=crop&w=1064&q=80",
+    category: "omelette",
+    addOns: [
+      { name: "Extra Cheese", price: "₹40" },
+      { name: "Extra Vegetables", price: "₹25" },
+      { name: "Extra Spices", price: "₹15" }
+    ]
+  },
+  {
+    id: 6,
+    name: "Cheese Omelette Afghani",
+    description: "Two-egg omelette with Afghani spices and melted cheese.",
+    price: "₹180",
+    image: "https://images.unsplash.com/photo-1564834744159-ff0ea41ba4b9?auto=format&fit=crop&w=1064&q=80",
+    category: "omelette",
+    addOns: [
+      { name: "Extra Cheese", price: "₹35" },
+      { name: "Extra Vegetables", price: "₹25" },
+      { name: "Extra Spices", price: "₹15" }
+    ]
   },
   // Starters
   {
@@ -213,6 +272,7 @@ const Menu = () => {
                   price={item.price}
                   image={item.image}
                   popular={item.popular}
+                  addOns={item.addOns}
                 />
               ))}
             </div>
