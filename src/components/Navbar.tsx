@@ -2,13 +2,25 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, X, User } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
+  };
+  
+  const handleOrderNow = () => {
+    toast({
+      title: "Starting your order",
+      description: "Taking you to our menu page",
+      duration: 2000,
+    });
+    navigate('/menu');
   };
 
   return (
@@ -27,7 +39,7 @@ const Navbar = () => {
           <Link to="/signin" className="font-medium text-gray-800 hover:text-sweet-600 transition-colors">
             <User size={18} className="inline mr-1" /> Sign In
           </Link>
-          <Button className="bg-sweet-600 hover:bg-sweet-700">Order Now</Button>
+          <Button className="bg-sweet-600 hover:bg-sweet-700" onClick={handleOrderNow}>Order Now</Button>
         </div>
         
         {/* Mobile Menu Button */}
@@ -50,7 +62,7 @@ const Navbar = () => {
             <Link to="/signin" className="font-medium text-gray-800 hover:text-sweet-600 transition-colors">
               <User size={18} className="inline mr-1" /> Sign In
             </Link>
-            <Button className="bg-sweet-600 hover:bg-sweet-700 w-full">Order Now</Button>
+            <Button className="bg-sweet-600 hover:bg-sweet-700 w-full" onClick={handleOrderNow}>Order Now</Button>
           </div>
         </div>
       )}

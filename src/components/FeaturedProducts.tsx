@@ -1,7 +1,9 @@
 
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ProductCard from './ProductCard';
 import { Button } from '@/components/ui/button';
+import { useToast } from "@/hooks/use-toast";
 
 const categories = [
   { id: 'all', name: 'All Items' },
@@ -15,7 +17,7 @@ const products = [
     id: 1,
     name: 'Classic Shakshuka',
     description: 'Eggs poached in a spicy tomato sauce with bell peppers and herbs.',
-    price: '$12.99',
+    price: '₹12.99',
     image: 'https://images.unsplash.com/photo-1590412200988-a436970781fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80',
     category: 'breakfast',
     popular: true,
@@ -24,7 +26,7 @@ const products = [
     id: 2,
     name: 'Eggs Benedict',
     description: 'Poached eggs, ham, and hollandaise sauce on English muffins.',
-    price: '$14.99',
+    price: '₹14.99',
     image: 'https://images.unsplash.com/photo-1608039829572-78524f79c4c7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1935&q=80',
     category: 'breakfast',
     popular: true,
@@ -33,7 +35,7 @@ const products = [
     id: 3,
     name: 'Egg Fried Rice',
     description: 'Fluffy rice with scrambled eggs, vegetables, and savory sauces.',
-    price: '$10.99',
+    price: '₹10.99',
     image: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1925&q=80',
     category: 'lunch',
     popular: true,
@@ -42,7 +44,7 @@ const products = [
     id: 4,
     name: 'Deviled Eggs',
     description: 'Halved hard-boiled eggs filled with creamy, seasoned yolk mixture.',
-    price: '$8.99',
+    price: '₹8.99',
     image: 'https://images.unsplash.com/photo-1635436338433-89747d0ca0ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
     category: 'specialty',
   },
@@ -50,7 +52,7 @@ const products = [
     id: 5,
     name: 'Egg Curry',
     description: 'Hard-boiled eggs simmered in a rich, aromatic curry sauce.',
-    price: '$13.99',
+    price: '₹13.99',
     image: 'https://images.unsplash.com/photo-1589647363585-f4a7d3877b10?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1287&q=80',
     category: 'lunch',
     popular: false,
@@ -59,7 +61,7 @@ const products = [
     id: 6,
     name: 'Fluffy Omelette',
     description: 'Three-egg omelette with cheese, vegetables, and your choice of protein.',
-    price: '$11.99',
+    price: '₹11.99',
     image: 'https://images.unsplash.com/photo-1510693206972-df098062cb71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1098&q=80',
     category: 'breakfast',
   },
@@ -67,7 +69,7 @@ const products = [
     id: 7,
     name: 'Egg Salad Sandwich',
     description: 'Creamy egg salad with herbs on freshly baked bread.',
-    price: '$9.99',
+    price: '₹9.99',
     image: 'https://images.unsplash.com/photo-1568727349530-1d15e2a3a762?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=654&q=80',
     category: 'lunch',
   },
@@ -75,7 +77,7 @@ const products = [
     id: 8,
     name: 'Egg Breakfast Box',
     description: 'Assortment of our best egg breakfast items in a convenient box.',
-    price: '$16.99',
+    price: '₹16.99',
     image: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=880&q=80',
     category: 'specialty',
   },
@@ -83,10 +85,25 @@ const products = [
 
 const FeaturedProducts = () => {
   const [activeCategory, setActiveCategory] = useState('all');
+  const navigate = useNavigate();
+  const { toast } = useToast();
   
   const filteredProducts = activeCategory === 'all' 
     ? products 
     : products.filter(product => product.category === activeCategory);
+  
+  const handleViewMenu = () => {
+    navigate('/menu');
+  };
+
+  const handleOrderNow = () => {
+    toast({
+      title: "Order Started",
+      description: "Taking you to our full menu to continue",
+      duration: 2000,
+    });
+    navigate('/menu');
+  };
   
   return (
     <section className="py-16 bg-cream-50">
@@ -123,12 +140,17 @@ const FeaturedProducts = () => {
               price={product.price}
               image={product.image}
               popular={product.popular}
+              addOns={[
+                { name: "Extra cheese", price: "₹2.50" },
+                { name: "Premium toppings", price: "₹3.50" },
+                { name: "Gluten-free option", price: "₹1.50" }
+              ]}
             />
           ))}
         </div>
         
         <div className="text-center mt-12">
-          <Button className="bg-sweet-600 hover:bg-sweet-700">View Full Menu</Button>
+          <Button className="bg-sweet-600 hover:bg-sweet-700" onClick={handleViewMenu}>View Full Menu</Button>
         </div>
       </div>
     </section>

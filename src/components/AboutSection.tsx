@@ -39,6 +39,28 @@ const AboutSection = () => {
               Every recipe we create is a perfect blend of health and taste. Eggs are packed with protein, vitamins, and minerals, making them the perfect foundation for a nutritious meal. We've spent countless hours perfecting our recipes, sourcing the freshest ingredients, and creating dishes that surprise and delight.
             </p>
             
+            <div className="mt-4 p-6 bg-cream-50 rounded-lg border border-[#FFB700]/20">
+              <h4 className="text-xl font-bold text-[#FFB700] mb-3">Our Journey from Kitchen to Cities</h4>
+              <p className="text-gray-600 mb-3">
+                Egg'd Foods began in my humble kitchen with just a pan, some farm-fresh eggs, and an immense passion for creating nutritious and delicious food. What started as experimental recipes for friends and family quickly blossomed into something much bigger than I had ever imagined.
+              </p>
+              <p className="text-gray-600 mb-3">
+                I remember the day vividly - I had prepared my signature Shakshuka for a small gathering, and a friend who worked in the restaurant business was astounded. "This isn't just food," he said, "this is a revolution in how we think about eggs." That moment was the catalyst that pushed me to take Egg'd Foods from a passionate hobby to a full-fledged business.
+              </p>
+              <p className="text-gray-600 mb-3">
+                The first Egg'd Foods location opened in INDORE with just four tables and a small kitchen. The response was overwhelming - lines forming outside before opening hours, rave reviews spreading through word of mouth, and customers returning day after day to try every item on our menu. The community embraced our vision of elevating egg-based cuisine.
+              </p>
+              <p className="text-gray-600 mb-3">
+                As demand grew, so did our responsibility to maintain quality while scaling our operations. We established strict sourcing guidelines, partnering directly with local farmers to ensure every egg we use is ethically produced, farm-fresh, and of the highest quality. Our chefs undergo specialized training to understand the science behind egg cookery - temperature control, timing, and ingredient pairings that enhance nutritional value without compromising flavor.
+              </p>
+              <p className="text-gray-600 mb-3">
+                Our success in INDORE led to our expansion to VADODARA, where we adapted our menu to incorporate regional flavors while maintaining our commitment to nutritional excellence. Each new location has become not just a restaurant but a community hub where people gather to enjoy healthful, delicious meals in a warm, welcoming atmosphere.
+              </p>
+              <p className="text-gray-600">
+                Today, we're thrilled to be serving in INDORE and VADODARA, with plans to open soon in DELHI NCR. Our mission remains unchanged: to revolutionize how people perceive and enjoy eggs, making nutritious food accessible, exciting, and delicious for everyone. Every plate we serve is a testament to our belief that health-conscious eating doesn't mean sacrificing flavor - in fact, it enhances it.
+              </p>
+            </div>
+            
             <div className="grid grid-cols-2 gap-4 pt-4">
               {[
                 { title: "Premium Quality", description: "Farm-fresh eggs & premium ingredients" },

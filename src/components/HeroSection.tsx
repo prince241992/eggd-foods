@@ -1,7 +1,21 @@
+
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 const HeroSection = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  
+  const handleOrderNow = () => {
+    toast({
+      title: "Starting your order",
+      description: "Taking you to our menu page",
+      duration: 2000,
+    });
+    navigate('/menu');
+  };
+  
   return (
     <div className="relative overflow-hidden bg-gradient-to-r from-cream-50 to-cream-100 py-16 md:py-24">
       <div className="container-custom grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
@@ -14,12 +28,26 @@ const HeroSection = () => {
             Level up your meals with our insanely delicious egg creations! From classic breakfast vibes to mind-blowing fusion dishes, we're here to satisfy your egg-venture cravings. 🔥
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
-            <Button className="bg-sweet-600 hover:bg-sweet-700 text-lg h-12 px-8">Order Now</Button>
+            <Button 
+              className="bg-sweet-600 hover:bg-sweet-700 text-lg h-12 px-8"
+              onClick={handleOrderNow}
+            >
+              Order Now
+            </Button>
             <Link to="/menu">
               <Button variant="outline" className="border-sweet-500 text-sweet-600 hover:bg-sweet-50 text-lg h-12 px-8">
                 View Menu
               </Button>
             </Link>
+          </div>
+          
+          <div className="bg-sweet-50 p-4 rounded-lg border border-sweet-100">
+            <p className="text-gray-700 font-medium">
+              <span className="font-bold text-sweet-600">Open Hours:</span> Monday to Sunday, 11AM to 3AM
+            </p>
+            <p className="text-gray-700 font-medium mt-1">
+              <span className="font-bold text-sweet-600">Currently serving:</span> INDORE, VADODARA
+            </p>
           </div>
         </div>
         <div className="relative">
@@ -46,7 +74,7 @@ const HeroSection = () => {
           {[
             { label: "Farm Fresh Eggs", value: "100%" },
             { label: "Made Fresh Daily", value: "Guaranteed" },
-            { label: "Delivery Areas", value: "All City" },
+            { label: "Delivery Areas", value: "3 Cities" },
             { label: "Satisfied Customers", value: "10,000+" }
           ].map((stat, index) => (
             <div key={index} className="text-center">

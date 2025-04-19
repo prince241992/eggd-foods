@@ -38,13 +38,13 @@ const ProductCard = ({ name, description, price, image, popular, addOns, classNa
     setAddingToCart(true);
     
     const currentHour = new Date().getHours();
-    const isCodAvailable = currentHour >= 8 && currentHour < 18;
+    const isCodAvailable = currentHour >= 11 && currentHour < 3;
     
     // Simulate API call or state update
     setTimeout(() => {
       toast({
         title: "Added to Cart! 🍳",
-        description: `${name} with ${selectedAddOns.length} add-ons has been added to your cart${!isCodAvailable ? "\nNote: Cash on Delivery available only from 8 AM to 6 PM" : ""}`,
+        description: `${name} with ${selectedAddOns.length} add-ons has been added to your cart${!isCodAvailable ? "\nNote: Cash on Delivery available only from 11 AM to 3 AM" : ""}`,
         duration: 3000,
       });
       
@@ -54,6 +54,9 @@ const ProductCard = ({ name, description, price, image, popular, addOns, classNa
       setAddingToCart(false);
     }, 600);
   };
+
+  // Convert price string from $ to ₹ if needed
+  const formattedPrice = price.startsWith("$") ? `₹${price.substring(1)}` : price;
 
   return (
     <div className={cn(
@@ -76,7 +79,7 @@ const ProductCard = ({ name, description, price, image, popular, addOns, classNa
       <div className="p-4">
         <div className="flex justify-between items-start mb-2">
           <h3 className="text-base font-bold text-gray-800">{name}</h3>
-          <span className="font-semibold text-sweet-600">{price}</span>
+          <span className="font-semibold text-sweet-600">{formattedPrice}</span>
         </div>
         <p className="text-gray-600 text-xs mb-3 line-clamp-2">{description}</p>
         
@@ -95,7 +98,7 @@ const ProductCard = ({ name, description, price, image, popular, addOns, classNa
                     />
                     {addon.name}
                   </label>
-                  <span className="text-xs text-gray-600">{addon.price}</span>
+                  <span className="text-xs text-gray-600">{addon.price.startsWith("$") ? `₹${addon.price.substring(1)}` : addon.price}</span>
                 </div>
               ))}
             </div>

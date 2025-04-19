@@ -1,15 +1,16 @@
 
 import { useState } from "react";
-import { ShoppingCart, X, Package, ChevronRight, Plus, Minus } from "lucide-react";
+import { ShoppingCart, X, ChevronRight, Plus, Minus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerClose, DrawerFooter } from "@/components/ui/drawer";
+import { useToast } from "@/hooks/use-toast";
 
 // Sample cart items for demonstration
 const initialCartItems = [
   {
     id: 1,
     name: "Classic Shakshuka",
-    price: "$12.99",
+    price: "₹12.99",
     quantity: 1,
     image: "https://images.unsplash.com/photo-1590412200988-a436970781fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80",
     addOns: ["Extra cheese"]
@@ -17,7 +18,7 @@ const initialCartItems = [
   {
     id: 3,
     name: "Egg Fried Rice",
-    price: "$10.99",
+    price: "₹10.99",
     quantity: 2,
     image: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1925&q=80",
     addOns: []
@@ -36,6 +37,7 @@ interface CartItem {
 const CartButton = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [cartItems, setCartItems] = useState<CartItem[]>(initialCartItems);
+  const { toast } = useToast();
 
   const updateQuantity = (id: number, newQuantity: number) => {
     if (newQuantity < 1) return;
@@ -49,14 +51,29 @@ const CartButton = () => {
 
   const removeItem = (id: number) => {
     setCartItems(items => items.filter(item => item.id !== id));
+    toast({
+      title: "Item removed",
+      description: "Item has been removed from your cart",
+      duration: 2000,
+    });
   };
 
   // Calculate total items and cost
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = cartItems.reduce((sum, item) => {
-    const price = parseFloat(item.price.replace('$', ''));
+    const price = parseFloat(item.price.replace('₹', ''));
     return sum + (price * item.quantity);
   }, 0);
+
+  const handleCheckout = () => {
+    toast({
+      title: "Proceeding to checkout",
+      description: "Your order is being processed",
+      duration: 3000,
+    });
+    // Additional checkout logic can go here
+    setIsOpen(false);
+  };
 
   return (
     <>
@@ -150,30 +167,30 @@ const CartButton = () => {
               <div className="space-y-2 mb-4">
                 <div className="flex justify-between text-sm">
                   <span>Subtotal</span>
-                  <span>${subtotal.toFixed(2)}</span>
+                  <span>₹{subtotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span>Delivery Fee</span>
-                  <span>$2.99</span>
+                  <span>₹2.99</span>
                 </div>
                 <div className="flex justify-between font-bold text-lg pt-2 border-t">
                   <span>Total</span>
-                  <span>${(subtotal + 2.99).toFixed(2)}</span>
+                  <span>₹{(subtotal + 2.99).toFixed(2)}</span>
                 </div>
                 
                 <div className="text-xs text-gray-500 mt-1">
-                  <p>Cash on Delivery available from 8 AM to 6 PM</p>
+                  <p>Cash on Delivery available from 11 AM to 3 AM</p>
                 </div>
               </div>
               
-              <Button className="w-full bg-sweet-600 hover:bg-sweet-700 gap-1">
+              <Button className="w-full bg-sweet-600 hover:bg-sweet-700 gap-1" onClick={handleCheckout}>
                 Proceed to Checkout
                 <ChevronRight size={16} />
               </Button>
               
               <div className="flex justify-between pt-2">
-                <span className="text-xs text-gray-500">Free delivery on orders over $30</span>
-                <span className="text-xs text-gray-500">Min order: $10</span>
+                <span className="text-xs text-gray-500">Free delivery on orders over ₹30</span>
+                <span className="text-xs text-gray-500">Min order: ₹10</span>
               </div>
             </DrawerFooter>
           )}
