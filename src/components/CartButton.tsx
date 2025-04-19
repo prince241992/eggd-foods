@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ShoppingCart, X, ChevronRight, Plus, Minus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerClose, DrawerFooter } from "@/components/ui/drawer";
@@ -38,6 +39,7 @@ const CartButton = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [cartItems, setCartItems] = useState<CartItem[]>(initialCartItems);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const updateQuantity = (id: number, newQuantity: number) => {
     if (newQuantity < 1) return;
@@ -66,13 +68,8 @@ const CartButton = () => {
   }, 0);
 
   const handleCheckout = () => {
-    toast({
-      title: "Proceeding to checkout",
-      description: "Your order is being processed",
-      duration: 3000,
-    });
-    // Additional checkout logic can go here
     setIsOpen(false);
+    navigate('/checkout');
   };
 
   return (
