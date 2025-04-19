@@ -5,8 +5,8 @@ import { Button } from '@/components/ui/button';
 
 const categories = [
   { id: 'all', name: 'All Items' },
-  { id: 'breakfast', name: 'Breakfast' },
-  { id: 'lunch', name: 'Lunch & Dinner' },
+  { id: 'popular', name: 'Most Popular' },
+  { id: 'new', name: 'New Arrivals' },
   { id: 'specialty', name: 'Specialty Items' },
 ];
 

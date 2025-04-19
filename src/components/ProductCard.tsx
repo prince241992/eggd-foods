@@ -50,27 +50,27 @@ const ProductCard = ({ name, description, price, image, popular, addOns, classNa
   return (
     <div className={cn(
       "bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300",
-      "transform scale-85", // Increased size by 10% from previous 75%
+      "transform scale-85",
       className
     )}>
-      <div className="relative">
+      <div className="relative aspect-[4/3]">
         <img 
           src={image} 
           alt={name} 
-          className="w-full h-45 object-cover" // Reduced height from h-60
+          className="w-full h-full object-cover" 
         />
         {popular && (
-          <span className="absolute top-3 right-3 bg-spice-500 text-white px-2 py-1 rounded-full text-xs font-medium">
+          <span className="absolute top-3 right-3 bg-[#FFB700] text-white px-2 py-1 rounded-full text-xs font-medium">
             Popular
           </span>
         )}
       </div>
-      <div className="p-4"> {/* Reduced padding */}
+      <div className="p-4">
         <div className="flex justify-between items-start mb-2">
-          <h3 className="text-base font-bold text-gray-800">{name}</h3> {/* Reduced text size */}
+          <h3 className="text-base font-bold text-gray-800">{name}</h3>
           <span className="font-semibold text-sweet-600">{price}</span>
         </div>
-        <p className="text-gray-600 text-xs mb-3">{description}</p> {/* Reduced text size and margin */}
+        <p className="text-gray-600 text-xs mb-3">{description}</p>
         
         {showAddOns && addOns && addOns.length > 0 && (
           <div className="mb-3 border-t border-b py-2">

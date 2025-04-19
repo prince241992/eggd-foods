@@ -15,7 +15,11 @@ const Navbar = () => {
     <nav className="py-4 bg-white/95 sticky top-0 z-50 shadow-sm backdrop-blur-sm">
       <div className="container-custom flex items-center justify-between">
         <Link to="/" className="flex items-center">
-          <span className="text-2xl font-bold font-display text-sweet-700">Egg'd<span className="text-spice-600">Foods</span></span>
+          <img 
+            src="/lovable-uploads/5d1f7ecf-1350-414e-96a4-7637bca44a37.png" 
+            alt="Egg'd Foods Logo" 
+            className="h-12"
+          />
         </Link>
         
         {/* Desktop Navigation */}
