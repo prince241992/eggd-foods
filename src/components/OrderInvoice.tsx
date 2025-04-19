@@ -1,9 +1,18 @@
 
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Printer, Download, Share2 } from 'lucide-react';
+import { Printer, Download, Share2, Settings, Upload, ChevronDown } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { 
+  Popover, 
+  PopoverContent, 
+  PopoverTrigger 
+} from '@/components/ui/popover';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 
 interface InvoiceItem {
   id: number;
@@ -55,7 +64,12 @@ const OrderInvoice = ({
   thermalPrinterMode = false,
 }: OrderInvoiceProps) => {
   const invoiceRef = useRef<HTMLDivElement>(null);
+  const [localThermalMode, setLocalThermalMode] = useState(thermalPrinterMode);
+  const [localLogo, setLocalLogo] = useState(logo);
+  const [localHeaderText, setLocalHeaderText] = useState(headerText);
+  const [localFooterText, setLocalFooterText] = useState(footerText);
   const { toast } = useToast();
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const handlePrint = () => {
     const content = invoiceRef.current;
@@ -74,7 +88,7 @@ const OrderInvoice = ({
     printWindow.document.write('<html><head><title>Order Invoice</title>');
     
     // Add styles for printing
-    if (thermalPrinterMode) {
+    if (localThermalMode) {
       printWindow.document.write(`
         <style>
           body { font-family: monospace; font-size: 10px; width: 80mm; margin: 0; padding: 10px; }
@@ -129,39 +143,152 @@ const OrderInvoice = ({
     });
   };
 
+  const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (typeof e.target?.result === 'string') {
+          setLocalLogo(e.target.result);
+          toast({
+            title: 'Logo Updated',
+            description: 'Your logo has been uploaded successfully.',
+          });
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const oneShotPrint = () => {
+    handlePrint();
+    toast({
+      title: 'One-Click Print',
+      description: 'Invoice sent to printer with current settings.',
+    });
+  };
+
   return (
     <Card className="w-full max-w-3xl mx-auto">
       <CardHeader className="flex flex-row justify-between items-center">
         <h2 className="text-2xl font-bold">Invoice</h2>
         <div className="flex space-x-2">
-          <Button variant="outline" size="sm" onClick={handlePrint}>
-            <Printer className="w-4 h-4 mr-2" /> Print
+          <Button variant="outline" size="sm" onClick={oneShotPrint}>
+            <Printer className="w-4 h-4 mr-2" /> Quick Print
           </Button>
-          <Button variant="outline" size="sm" onClick={handleDownload}>
-            <Download className="w-4 h-4 mr-2" /> Download
-          </Button>
-          <Button variant="outline" size="sm" onClick={handleShare}>
-            <Share2 className="w-4 h-4 mr-2" /> Share
-          </Button>
+          
+          <Popover open={settingsOpen} onOpenChange={setSettingsOpen}>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="sm">
+                <Settings className="w-4 h-4 mr-2" /> Options
+                <ChevronDown className="h-4 w-4 ml-1" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80">
+              <div className="space-y-4">
+                <h3 className="font-medium">Invoice Settings</h3>
+                
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="thermal-mode">Thermal Printer Mode</Label>
+                  <Switch
+                    id="thermal-mode"
+                    checked={localThermalMode}
+                    onCheckedChange={setLocalThermalMode}
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="logo-upload">Upload Logo</Label>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full"
+                      onClick={() => document.getElementById('logo-upload')?.click()}
+                    >
+                      <Upload className="h-4 w-4 mr-2" />
+                      Choose Image
+                    </Button>
+                    <input 
+                      type="file" 
+                      id="logo-upload" 
+                      className="hidden" 
+                      accept="image/*"
+                      onChange={handleLogoUpload}
+                    />
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="header-text">Header Text</Label>
+                  <Input
+                    id="header-text"
+                    value={localHeaderText}
+                    onChange={(e) => setLocalHeaderText(e.target.value)}
+                    placeholder="Thank you for your order!"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="footer-text">Footer Text</Label>
+                  <Textarea
+                    id="footer-text"
+                    value={localFooterText}
+                    onChange={(e) => setLocalFooterText(e.target.value)}
+                    placeholder="We appreciate your business. Please come again!"
+                    rows={2}
+                  />
+                </div>
+                
+                <div className="flex justify-end">
+                  <Button
+                    size="sm"
+                    onClick={() => {
+                      toast({
+                        title: 'Settings Applied',
+                        description: 'Your invoice settings have been updated.',
+                      });
+                      setSettingsOpen(false);
+                    }}
+                  >
+                    Apply
+                  </Button>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
+          
+          <div className="flex space-x-1">
+            <Button variant="outline" size="sm" onClick={handlePrint}>
+              <Printer className="w-4 h-4" />
+            </Button>
+            <Button variant="outline" size="sm" onClick={handleDownload}>
+              <Download className="w-4 h-4" />
+            </Button>
+            <Button variant="outline" size="sm" onClick={handleShare}>
+              <Share2 className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
       </CardHeader>
       
       <CardContent>
-        <div ref={invoiceRef} className={thermalPrinterMode ? "font-mono text-sm" : ""}>
+        <div ref={invoiceRef} className={localThermalMode ? "font-mono text-sm" : ""}>
           {/* Invoice Content for printing */}
           <div className="invoice-header flex justify-between items-center mb-6">
             <div>
-              <img src={logo} alt="Restaurant Logo" className="max-h-16" />
+              <img src={localLogo} alt="Restaurant Logo" className="max-h-16" />
             </div>
             <div className="text-right">
               <h1 className="font-bold text-xl">INVOICE</h1>
               <p className="text-gray-600">Order #: {orderNumber}</p>
               <p className="text-gray-600">Date: {date}</p>
+              <p className="text-gray-600">Branch: {branch}</p>
             </div>
           </div>
           
-          {headerText && (
-            <div className="text-center my-4 text-gray-700">{headerText}</div>
+          {localHeaderText && (
+            <div className="text-center my-4 text-gray-700">{localHeaderText}</div>
           )}
           
           <div className="invoice-details grid grid-cols-2 gap-4 mb-6">
@@ -173,9 +300,9 @@ const OrderInvoice = ({
             </div>
             <div className="text-right">
               <h3 className="font-semibold text-gray-800">Order Details:</h3>
-              <p>Branch: {branch}</p>
               <p>Order Type: {orderType}</p>
               {deliveryTime && <p>Delivery/Pickup Time: {deliveryTime}</p>}
+              <p>Payment Method: {paymentMethod}</p>
             </div>
           </div>
           
@@ -196,7 +323,7 @@ const OrderInvoice = ({
                     <td className="text-center">{item.quantity}</td>
                     <td className="text-right">{item.price}</td>
                     <td className="text-right">
-                      {parseFloat(item.price.replace('₹', '')) * item.quantity}
+                      ₹{(parseFloat(item.price.replace('₹', '')) * item.quantity).toFixed(2)}
                     </td>
                   </tr>
                   {item.addOns && item.addOns.length > 0 && (
@@ -206,7 +333,7 @@ const OrderInvoice = ({
                         <td className="text-center">{item.quantity}</td>
                         <td className="text-right">{addon.price}</td>
                         <td className="text-right">
-                          {parseFloat(addon.price.replace('₹', '')) * item.quantity}
+                          ₹{(parseFloat(addon.price.replace('₹', '')) * item.quantity).toFixed(2)}
                         </td>
                       </tr>
                     ))
@@ -233,14 +360,11 @@ const OrderInvoice = ({
               <span>Total:</span>
               <span>{total}</span>
             </div>
-            <div className="text-gray-600 text-sm mt-2">
-              Payment Method: {paymentMethod}
-            </div>
           </div>
           
-          {footerText && (
+          {localFooterText && (
             <div className="text-center mt-8 text-gray-600 text-sm border-t pt-4">
-              {footerText}
+              {localFooterText}
             </div>
           )}
         </div>
@@ -248,12 +372,12 @@ const OrderInvoice = ({
       
       <CardFooter className="flex justify-between">
         <div className="text-sm text-gray-500">
-          {thermalPrinterMode ? 'Thermal printer mode active' : 'Standard invoice format'}
+          {localThermalMode ? 'Thermal printer mode active' : 'Standard invoice format'}
         </div>
         <Button 
           variant="outline" 
           size="sm" 
-          onClick={() => thermalPrinterMode ? null : handlePrint()}
+          onClick={() => localThermalMode ? null : handlePrint()}
         >
           <Printer className="w-4 h-4 mr-2" /> Print Receipt
         </Button>

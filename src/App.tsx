@@ -12,6 +12,7 @@ import Contact from "./pages/Contact";
 import SignIn from "./pages/SignIn";
 import Checkout from "./pages/Checkout";
 import DeliveryDashboard from "./pages/DeliveryDashboard";
+import OrderTracking from "./pages/OrderTracking";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="/contact" element={<Contact />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/delivery-dashboard" element={<DeliveryDashboard />} />
+          <Route path="/track-order" element={<OrderTracking />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <CartButton />
