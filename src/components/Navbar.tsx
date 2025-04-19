@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, User } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Navbar = () => {
@@ -15,11 +15,7 @@ const Navbar = () => {
     <nav className="py-4 bg-white/95 sticky top-0 z-50 shadow-sm backdrop-blur-sm">
       <div className="container-custom flex items-center justify-between">
         <Link to="/" className="flex items-center">
-          <img 
-            src="/lovable-uploads/5d1f7ecf-1350-414e-96a4-7637bca44a37.png" 
-            alt="Egg'd Foods Logo" 
-            className="h-12"
-          />
+          <h1 className="text-2xl font-bold text-sweet-600">Egg'd <span className="text-gray-800">Foods</span></h1>
         </Link>
         
         {/* Desktop Navigation */}
@@ -28,6 +24,9 @@ const Navbar = () => {
           <Link to="/menu" className="font-medium text-gray-800 hover:text-sweet-600 transition-colors">Menu</Link>
           <Link to="/about" className="font-medium text-gray-800 hover:text-sweet-600 transition-colors">About</Link>
           <Link to="/contact" className="font-medium text-gray-800 hover:text-sweet-600 transition-colors">Contact</Link>
+          <Link to="/signin" className="font-medium text-gray-800 hover:text-sweet-600 transition-colors">
+            <User size={18} className="inline mr-1" /> Sign In
+          </Link>
           <Button className="bg-sweet-600 hover:bg-sweet-700">Order Now</Button>
         </div>
         
@@ -48,6 +47,9 @@ const Navbar = () => {
             <Link to="/menu" className="font-medium text-gray-800 hover:text-sweet-600 transition-colors">Menu</Link>
             <Link to="/about" className="font-medium text-gray-800 hover:text-sweet-600 transition-colors">About</Link>
             <Link to="/contact" className="font-medium text-gray-800 hover:text-sweet-600 transition-colors">Contact</Link>
+            <Link to="/signin" className="font-medium text-gray-800 hover:text-sweet-600 transition-colors">
+              <User size={18} className="inline mr-1" /> Sign In
+            </Link>
             <Button className="bg-sweet-600 hover:bg-sweet-700 w-full">Order Now</Button>
           </div>
         </div>

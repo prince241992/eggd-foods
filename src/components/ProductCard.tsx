@@ -1,7 +1,8 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Plus, ShoppingCart } from "lucide-react";
+import { Plus, ShoppingCart, Check } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface AddOn {
@@ -22,6 +23,7 @@ interface ProductCardProps {
 const ProductCard = ({ name, description, price, image, popular, addOns, className }: ProductCardProps) => {
   const [showAddOns, setShowAddOns] = useState(false);
   const [selectedAddOns, setSelectedAddOns] = useState<AddOn[]>([]);
+  const [addingToCart, setAddingToCart] = useState(false);
   const { toast } = useToast();
 
   const toggleAddOn = (addon: AddOn) => {
@@ -33,27 +35,33 @@ const ProductCard = ({ name, description, price, image, popular, addOns, classNa
   };
 
   const addToCart = () => {
+    setAddingToCart(true);
+    
     const currentHour = new Date().getHours();
     const isCodAvailable = currentHour >= 8 && currentHour < 18;
     
-    toast({
-      title: "Added to Cart! 🍳",
-      description: `${name} with ${selectedAddOns.length} add-ons has been added to your cart${!isCodAvailable ? "\nNote: Cash on Delivery available only from 8 AM to 6 PM" : ""}`,
-      duration: 3000,
-    });
-    
-    console.log("Added to cart:", { name, price, selectedAddOns });
-    setShowAddOns(false);
-    setSelectedAddOns([]);
+    // Simulate API call or state update
+    setTimeout(() => {
+      toast({
+        title: "Added to Cart! 🍳",
+        description: `${name} with ${selectedAddOns.length} add-ons has been added to your cart${!isCodAvailable ? "\nNote: Cash on Delivery available only from 8 AM to 6 PM" : ""}`,
+        duration: 3000,
+      });
+      
+      console.log("Added to cart:", { name, price, selectedAddOns });
+      setShowAddOns(false);
+      setSelectedAddOns([]);
+      setAddingToCart(false);
+    }, 600);
   };
 
   return (
     <div className={cn(
       "bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300",
-      "transform scale-85",
+      "transform scale-95",
       className
     )}>
-      <div className="relative aspect-[4/3]">
+      <div className="relative aspect-square">
         <img 
           src={image} 
           alt={name} 
@@ -70,7 +78,7 @@ const ProductCard = ({ name, description, price, image, popular, addOns, classNa
           <h3 className="text-base font-bold text-gray-800">{name}</h3>
           <span className="font-semibold text-sweet-600">{price}</span>
         </div>
-        <p className="text-gray-600 text-xs mb-3">{description}</p>
+        <p className="text-gray-600 text-xs mb-3 line-clamp-2">{description}</p>
         
         {showAddOns && addOns && addOns.length > 0 && (
           <div className="mb-3 border-t border-b py-2">
@@ -100,6 +108,7 @@ const ProductCard = ({ name, description, price, image, popular, addOns, classNa
             size="sm" 
             className="flex-1 border-sweet-500 text-sweet-600 hover:bg-sweet-50"
             onClick={() => setShowAddOns(!showAddOns)}
+            disabled={addingToCart}
           >
             <Plus size={16} className="mr-1" /> Options
           </Button>
@@ -107,8 +116,17 @@ const ProductCard = ({ name, description, price, image, popular, addOns, classNa
             size="sm" 
             className="flex-1 bg-sweet-600 hover:bg-sweet-700"
             onClick={addToCart}
+            disabled={addingToCart}
           >
-            <ShoppingCart size={16} className="mr-1" /> Add
+            {addingToCart ? (
+              <span className="flex items-center">
+                <Check size={16} className="mr-1" /> Added
+              </span>
+            ) : (
+              <span className="flex items-center">
+                <ShoppingCart size={16} className="mr-1" /> Add
+              </span>
+            )}
           </Button>
         </div>
       </div>
