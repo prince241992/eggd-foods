@@ -55,6 +55,7 @@ const CartButton = () => {
   const [deliveryType, setDeliveryType] = useState<"delivery" | "pickup">("delivery");
   const [zipCode, setZipCode] = useState("");
   const [zipCodeValid, setZipCodeValid] = useState<boolean | null>(null);
+  const [deliveryDistance, setDeliveryDistance] = useState<number | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -121,13 +122,22 @@ const CartButton = () => {
   const minimumOrderAmount = 150.00;
   const isMinimumMet = subtotal >= minimumOrderAmount;
   
-  // Check if order qualifies for free shipping
-  const freeShippingThreshold = 350.00;
-  const qualifiesForFreeShipping = subtotal >= freeShippingThreshold;
+  // Calculate delivery fee based on distance
+  const calculateDeliveryFee = () => {
+    if (deliveryType === 'pickup') return 0;
+    
+    // Default delivery fee for within 5km
+    let deliveryFee = 60;
+    
+    // If we know the distance and it's between 5-10km
+    if (deliveryDistance !== null && deliveryDistance > 5 && deliveryDistance <= 10) {
+      deliveryFee = 85;
+    }
+    
+    return deliveryFee;
+  };
   
-  // Calculate shipping fee
-  const standardShippingFee = 2.99;
-  const shippingFee = qualifiesForFreeShipping || deliveryType === 'pickup' ? 0 : standardShippingFee;
+  const shippingFee = calculateDeliveryFee();
 
   const toggleOrderBump = (id: number) => {
     if (selectedOrderBumps.includes(id)) {
@@ -138,18 +148,32 @@ const CartButton = () => {
   };
   
   const validateZipCode = () => {
-    // Simulating ZIP code validation
-    const validZipCodes = ["110001", "110002", "400001", "400002", "560001"];
-    const isValid = validZipCodes.includes(zipCode);
+    // Simulating ZIP code validation with distance estimation
+    const validZipCodes = {
+      "452001": 2.5, // 2.5 km from restaurant
+      "452002": 3.8, // 3.8 km from restaurant
+      "452003": 5.2, // 5.2 km from restaurant
+      "452004": 7.1, // 7.1 km from restaurant
+      "452005": 8.9, // 8.9 km from restaurant
+      "452006": 4.3, // 4.3 km from restaurant
+      "452007": 9.5  // 9.5 km from restaurant
+    };
     
+    const isValid = zipCode in validZipCodes;
     setZipCodeValid(isValid);
     
     if (isValid) {
+      const distance = validZipCodes[zipCode];
+      setDeliveryDistance(distance);
+      
+      const fee = distance > 5 ? 85 : 60;
+      
       toast({
         title: "Delivery Available",
-        description: "We deliver to your location!",
+        description: `We deliver to your location! (${distance} km, ₹${fee} delivery charge)`,
       });
     } else {
+      setDeliveryDistance(null);
       toast({
         title: "Delivery Unavailable",
         description: "Sorry, we don't deliver to this ZIP code yet.",
@@ -194,7 +218,7 @@ const CartButton = () => {
         <div>
           <h3 className="text-sm font-medium">{item.name}</h3>
           <p className="text-xs text-gray-500">
-            {item.addOns.length > 0 ? `+ ${item.addOns.join(', ')}` : ''}
+            {item.addOns && item.addOns.length > 0 ? `+ ${item.addOns.join(', ')}` : ''}
           </p>
         </div>
       </div>
@@ -335,6 +359,7 @@ const CartButton = () => {
                           onChange={(e) => {
                             setZipCode(e.target.value);
                             setZipCodeValid(null);
+                            setDeliveryDistance(null);
                           }}
                           className="w-full px-3 py-2 border rounded-l pr-10"
                         />
@@ -355,6 +380,16 @@ const CartButton = () => {
                       <p className="text-xs mt-1 text-gray-500">
                         Enter your ZIP code to check if delivery is available in your area
                       </p>
+                      {deliveryDistance !== null && (
+                        <div className="mt-2 text-xs">
+                          <p className="font-medium text-gray-700">Estimated distance: {deliveryDistance} km</p>
+                          <p className="text-gray-600">
+                            {deliveryDistance <= 5 
+                              ? "Standard delivery charge: ₹60" 
+                              : "Extended delivery charge: ₹85"}
+                          </p>
+                        </div>
+                      )}
                     </div>
                   )}
                   
@@ -434,7 +469,7 @@ const CartButton = () => {
               </Button>
               
               <div className="flex justify-between pt-2">
-                <span className="text-xs text-gray-500">Free delivery on orders over ₹{freeShippingThreshold.toFixed(2)}</span>
+                <span className="text-xs text-gray-500">Loyalty: 1 point per ₹10 spent</span>
                 <span className="text-xs text-gray-500">Min order: ₹{minimumOrderAmount.toFixed(2)}</span>
               </div>
             </DrawerFooter>

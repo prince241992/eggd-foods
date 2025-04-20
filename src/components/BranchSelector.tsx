@@ -8,33 +8,15 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 
-// Sample branch data
+// Updated branch data (only Indore location)
 const branchData = [
   {
     id: 1,
-    name: "Downtown Location",
-    address: "123 Main Street, Downtown",
-    hours: "9:00 AM - 10:00 PM",
+    name: "Indore Location",
+    address: "Near Radission Hotel, Vijaynagar",
+    hours: "11:00 AM - 3:00 AM",
     isOpen: true,
-    phone: "+1 (555) 123-4567",
-    deliveryTime: "20-30 min"
-  },
-  {
-    id: 2,
-    name: "Eastside Branch",
-    address: "456 Oak Avenue, Eastside",
-    hours: "10:00 AM - 9:00 PM",
-    isOpen: true,
-    phone: "+1 (555) 987-6543",
-    deliveryTime: "25-40 min"
-  },
-  {
-    id: 3,
-    name: "Westview Location",
-    address: "789 Pine Road, Westview",
-    hours: "11:00 AM - 8:00 PM",
-    isOpen: false,
-    phone: "+1 (555) 567-8901",
+    phone: "+91 9898116290",
     deliveryTime: "30-45 min"
   }
 ];

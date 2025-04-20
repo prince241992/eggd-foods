@@ -50,6 +50,9 @@
     --funky-purple: 270 70% 60%;
     --funky-pink: 330 80% 60%;
     --funky-blue: 220 70% 60%;
+    --funky-gradient-1: linear-gradient(to right, #9b87f5, #d946ef);
+    --funky-gradient-2: linear-gradient(to right, #7E69AB, #D946EF);
+    --funky-gradient-3: linear-gradient(135deg, #9b87f5 0%, #d946ef 50%, #F97316 100%);
   }
 
   .dark {
@@ -99,6 +102,10 @@
   body {
     @apply bg-background text-foreground font-sans;
   }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+  }
 }
 
 @layer components {
@@ -116,7 +123,7 @@
   
   /* Funky card style */
   .funky-card {
-    @apply bg-gradient-to-br from-white to-purple-50 border-purple-200 hover:shadow-lg transition-all duration-300 overflow-hidden;
+    @apply bg-gradient-to-br from-white to-purple-50 border-purple-200 hover:shadow-lg transition-all duration-300 overflow-hidden rounded-lg;
   }
   
   /* Funky button style */
@@ -133,6 +140,36 @@
   .funky-text {
     @apply bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 inline-block text-transparent bg-clip-text;
   }
+  
+  /* Funky layout components */
+  .funky-section {
+    @apply relative overflow-hidden py-16 md:py-24;
+  }
+  
+  .funky-section::before {
+    content: "";
+    @apply absolute -top-10 -right-10 w-64 h-64 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full opacity-50 blur-3xl z-0;
+  }
+  
+  .funky-section::after {
+    content: "";
+    @apply absolute -bottom-10 -left-10 w-64 h-64 bg-gradient-to-br from-pink-200 to-purple-200 rounded-full opacity-50 blur-3xl z-0;
+  }
+  
+  /* Funky input style */
+  .funky-input {
+    @apply border-2 border-pink-300 focus:border-purple-500 focus:ring focus:ring-purple-200 focus:ring-opacity-50 rounded-md transition-all duration-200;
+  }
+  
+  /* Funky badge */
+  .funky-badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-purple-500 to-pink-500 text-white;
+  }
+  
+  /* Funky border */
+  .funky-border {
+    @apply border-2 border-transparent bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-border;
+  }
 }
 
 /* Custom animations */
@@ -147,6 +184,32 @@
   }
 }
 
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes colorChange {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+  }
+}
+
 .animate-pulse-funky {
   animation: pulse-funky 2s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-color-change {
+  animation: colorChange 10s linear infinite;
 }

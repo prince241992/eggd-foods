@@ -1,494 +1,514 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { EyeIcon, EyeOffIcon, Mail, Lock, User, Phone, ArrowRight, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
-import { Apple, ArrowRight, Mail, Phone } from "lucide-react";
 
 const SignIn = () => {
-  const [userType, setUserType] = useState<"customer" | "delivery">("customer");
-  const [authMode, setAuthMode] = useState<"email" | "phone" | "social">("email");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [phone, setPhone] = useState("");
-  const [otp, setOtp] = useState("");
-  const [isSignUp, setIsSignUp] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [otpSent, setOtpSent] = useState(false);
-  
   const navigate = useNavigate();
   const { toast } = useToast();
-
-  const handleSignIn = (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    
-    // This is a mock authentication - would be replaced with actual auth
-    setTimeout(() => {
-      setLoading(false);
-      
-      toast({
-        title: `${userType.charAt(0).toUpperCase() + userType.slice(1)} signed in!`,
-        description: `Welcome back! ${userType === 'delivery' ? 'Your delivery dashboard is ready.' : 'Enjoy your food ordering experience.'}`,
-        duration: 3000,
-      });
-      
-      // Redirect based on user type
-      if (userType === "delivery") {
-        navigate("/delivery-dashboard");
-      } else {
-        navigate("/menu");
-      }
-    }, 1500);
+  const [activeTab, setActiveTab] = useState<"signin" | "signup">("signin");
+  const [showPassword, setShowPassword] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  
+  // Form states
+  const [signinForm, setSigninForm] = useState({ email: "", password: "" });
+  const [signupForm, setSignupForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
+    otp: ""
+  });
+  
+  // Password strength
+  const [passwordStrength, setPasswordStrength] = useState(0);
+  const checkPasswordStrength = (password: string) => {
+    let score = 0;
+    if (password.length >= 8) score += 25;
+    if (/[A-Z]/.test(password)) score += 25;
+    if (/[0-9]/.test(password)) score += 25;
+    if (/[^A-Za-z0-9]/.test(password)) score += 25;
+    setPasswordStrength(score);
+    return score;
   };
   
-  const handleSocialAuth = (provider: "google" | "apple") => {
-    setLoading(true);
+  const getPasswordStrengthLabel = () => {
+    if (passwordStrength <= 25) return "Weak";
+    if (passwordStrength <= 50) return "Fair";
+    if (passwordStrength <= 75) return "Good";
+    return "Strong";
+  };
+  
+  const getPasswordStrengthColor = () => {
+    if (passwordStrength <= 25) return "bg-red-500";
+    if (passwordStrength <= 50) return "bg-yellow-500";
+    if (passwordStrength <= 75) return "bg-blue-500";
+    return "bg-green-500";
+  };
+  
+  // Handle sign-in form change
+  const handleSigninChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setSigninForm(prev => ({ ...prev, [name]: value }));
+  };
+  
+  // Handle sign-up form change
+  const handleSignupChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setSignupForm(prev => ({ ...prev, [name]: value }));
     
+    if (name === 'password') {
+      checkPasswordStrength(value);
+    }
+  };
+  
+  // Handle sign-in submission
+  const handleSignin = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Simple validation
+    if (!signinForm.email || !signinForm.password) {
+      toast({
+        title: "Error",
+        description: "Please fill in all fields",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Authentication logic would go here
     toast({
-      title: `Connecting to ${provider}...`,
-      description: "Please wait while we connect to your account",
-      duration: 2000,
+      title: "Success",
+      description: "You have successfully signed in",
+      duration: 2000
     });
     
-    // Mock social authentication
-    setTimeout(() => {
-      setLoading(false);
-      
-      toast({
-        title: "Authentication successful!",
-        description: `You've been signed in with ${provider}`,
-        duration: 3000,
-      });
-      
-      navigate(userType === "delivery" ? "/delivery-dashboard" : "/menu");
-    }, 2000);
+    navigate("/account");
   };
   
-  const handleSendOTP = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!phone || phone.length < 10) {
+  // Handle OTP request for sign-up
+  const handleRequestOTP = () => {
+    // Validate form fields
+    if (!signupForm.name || !signupForm.email || !signupForm.phone || !signupForm.password || !signupForm.confirmPassword) {
       toast({
-        title: "Invalid phone number",
-        description: "Please enter a valid phone number",
-        variant: "destructive",
-        duration: 3000,
+        title: "Error",
+        description: "Please fill in all fields",
+        variant: "destructive"
       });
       return;
     }
     
-    setLoading(true);
-    
-    // Mock OTP sending
-    setTimeout(() => {
-      setLoading(false);
-      setOtpSent(true);
-      
+    // Check if passwords match
+    if (signupForm.password !== signupForm.confirmPassword) {
       toast({
-        title: "OTP Sent!",
-        description: `A verification code has been sent to ${phone}`,
-        duration: 3000,
-      });
-    }, 1500);
-  };
-  
-  const handleVerifyOTP = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!otp || otp.length < 6) {
-      toast({
-        title: "Invalid OTP",
-        description: "Please enter the complete OTP",
-        variant: "destructive",
-        duration: 3000,
+        title: "Error",
+        description: "Passwords do not match",
+        variant: "destructive"
       });
       return;
     }
     
-    setLoading(true);
-    
-    // Mock OTP verification
-    setTimeout(() => {
-      setLoading(false);
-      
+    // Check password strength
+    if (passwordStrength < 50) {
       toast({
-        title: "Verification Successful!",
-        description: "Your phone number has been verified",
-        duration: 3000,
+        title: "Weak Password",
+        description: "Please use a stronger password with uppercase letters, numbers, and special characters",
+        variant: "destructive"
       });
-      
-      navigate(userType === "delivery" ? "/delivery-dashboard" : "/menu");
-    }, 1500);
+      return;
+    }
+    
+    // Send OTP logic would go here
+    setOtpSent(true);
+    toast({
+      title: "OTP Sent",
+      description: `A verification code has been sent to ${signupForm.email} and ${signupForm.phone}`,
+    });
   };
-
+  
+  // Handle sign-up submission
+  const handleSignup = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Validate OTP
+    if (!signupForm.otp || signupForm.otp.length !== 6) {
+      toast({
+        title: "Error",
+        description: "Please enter a valid OTP",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Registration logic would go here
+    toast({
+      title: "Success",
+      description: "Your account has been created successfully",
+      duration: 2000
+    });
+    
+    navigate("/account");
+  };
+  
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      
-      <main className="flex-grow bg-cream-50 py-16">
-        <div className="container-custom max-w-md mx-auto">
-          <div className="bg-white shadow-lg rounded-lg p-8">
-            <h1 className="text-3xl font-bold text-center mb-6">
-              {isSignUp ? "Create Account" : "Welcome Back"} - <span className="text-sweet-600">Egg'd Foods</span>
-            </h1>
-            
-            <Tabs defaultValue="customer" onValueChange={(value) => setUserType(value as "customer" | "delivery")}>
-              <TabsList className="grid w-full grid-cols-2 mb-6">
-                <TabsTrigger value="customer">Customer</TabsTrigger>
-                <TabsTrigger value="delivery">Delivery Partner</TabsTrigger>
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-purple-50 to-pink-50">
+      <div className="max-w-md w-full space-y-8">
+        <div className="text-center">
+          <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 font-display">
+            Egg'd Foods
+          </h1>
+          <p className="mt-2 text-gray-600">
+            {activeTab === "signin" ? "Sign in to your account" : "Create a new account"}
+          </p>
+        </div>
+        
+        <Card className="overflow-hidden shadow-lg border-0">
+          <CardContent className="p-0">
+            <Tabs 
+              defaultValue="signin" 
+              value={activeTab} 
+              onValueChange={(value) => setActiveTab(value as "signin" | "signup")}
+              className="w-full"
+            >
+              <TabsList className="grid grid-cols-2 rounded-none bg-gray-100">
+                <TabsTrigger value="signin">Sign In</TabsTrigger>
+                <TabsTrigger value="signup">Sign Up</TabsTrigger>
               </TabsList>
               
-              <div className="mb-6">
-                <div className="flex justify-between items-center mb-4">
-                  <button 
-                    className={`text-sm font-medium ${!isSignUp ? "text-sweet-600 border-b-2 border-sweet-600" : "text-gray-500"}`}
-                    onClick={() => setIsSignUp(false)}
-                  >
-                    Sign In
-                  </button>
-                  <button 
-                    className={`text-sm font-medium ${isSignUp ? "text-sweet-600 border-b-2 border-sweet-600" : "text-gray-500"}`}
-                    onClick={() => setIsSignUp(true)}
-                  >
-                    Sign Up
-                  </button>
-                </div>
-                
-                <div className="flex justify-center space-x-4 mb-6">
-                  <button
-                    type="button"
-                    className={`py-2 px-4 rounded-md flex items-center justify-center w-1/3 ${authMode === "email" ? "bg-sweet-600 text-white" : "bg-gray-100 text-gray-700"}`}
-                    onClick={() => setAuthMode("email")}
-                  >
-                    <Mail size={18} className="mr-2" />
-                    Email
-                  </button>
-                  <button
-                    type="button"
-                    className={`py-2 px-4 rounded-md flex items-center justify-center w-1/3 ${authMode === "phone" ? "bg-sweet-600 text-white" : "bg-gray-100 text-gray-700"}`}
-                    onClick={() => {
-                      setAuthMode("phone");
-                      setOtpSent(false);
-                    }}
-                  >
-                    <Phone size={18} className="mr-2" />
-                    Phone
-                  </button>
-                  <button
-                    type="button"
-                    className={`py-2 px-4 rounded-md flex items-center justify-center w-1/3 ${authMode === "social" ? "bg-sweet-600 text-white" : "bg-gray-100 text-gray-700"}`}
-                    onClick={() => setAuthMode("social")}
-                  >
-                    Social
-                  </button>
-                </div>
-              </div>
-              
-              <TabsContent value="customer">
-                {authMode === "email" && (
-                  <form onSubmit={handleSignIn} className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
-                      <Input 
-                        id="email" 
-                        type="email" 
-                        placeholder="youremail@example.com" 
-                        value={email} 
-                        onChange={(e) => setEmail(e.target.value)}
-                        required 
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="password">Password</Label>
-                      <Input 
-                        id="password" 
-                        type="password" 
-                        placeholder="••••••••" 
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required 
-                      />
-                    </div>
-                    
-                    <div className="pt-2">
-                      <Button 
-                        type="submit" 
-                        className="w-full bg-sweet-600 hover:bg-sweet-700"
-                        disabled={loading}
-                      >
-                        {loading ? `${isSignUp ? "Creating Account..." : "Signing in..."}` : isSignUp ? "Create Account" : "Sign In"}
-                      </Button>
-                    </div>
-                    
-                    {!isSignUp && (
-                      <div className="text-center text-sm text-gray-600">
-                        <p><a href="#" className="text-sweet-600 hover:underline">Forgot password?</a></p>
+              <div className="p-6">
+                {/* Sign In Form */}
+                <TabsContent value="signin">
+                  <form onSubmit={handleSignin} className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Email Address
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <Mail className="h-5 w-5 text-gray-400" />
+                        </div>
+                        <Input
+                          type="email"
+                          name="email"
+                          value={signinForm.email}
+                          onChange={handleSigninChange}
+                          placeholder="your@email.com"
+                          className="pl-10"
+                          required
+                        />
                       </div>
-                    )}
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Password
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <Lock className="h-5 w-5 text-gray-400" />
+                        </div>
+                        <Input
+                          type={showPassword ? "text" : "password"}
+                          name="password"
+                          value={signinForm.password}
+                          onChange={handleSigninChange}
+                          placeholder="••••••••••"
+                          className="pl-10 pr-10"
+                          required
+                        />
+                        <button
+                          type="button"
+                          className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {showPassword ? (
+                            <EyeOffIcon className="h-5 w-5 text-gray-400" />
+                          ) : (
+                            <EyeIcon className="h-5 w-5 text-gray-400" />
+                          )}
+                        </button>
+                      </div>
+                      <div className="text-right mt-1">
+                        <a href="#" className="text-xs text-purple-600 hover:text-purple-500">
+                          Forgot password?
+                        </a>
+                      </div>
+                    </div>
+                    
+                    <Button 
+                      type="submit"
+                      className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+                    >
+                      Sign In
+                    </Button>
                   </form>
-                )}
+                </TabsContent>
                 
-                {authMode === "phone" && (
-                  <>
+                {/* Sign Up Form */}
+                <TabsContent value="signup">
+                  <form onSubmit={handleSignup} className="space-y-4">
                     {!otpSent ? (
-                      <form onSubmit={handleSendOTP} className="space-y-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="phone">Phone Number</Label>
-                          <Input 
-                            id="phone" 
-                            type="tel" 
-                            placeholder="Enter your phone number" 
-                            value={phone} 
-                            onChange={(e) => setPhone(e.target.value)}
-                            required 
+                      <>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Full Name
+                          </label>
+                          <div className="relative">
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                              <User className="h-5 w-5 text-gray-400" />
+                            </div>
+                            <Input
+                              type="text"
+                              name="name"
+                              value={signupForm.name}
+                              onChange={handleSignupChange}
+                              placeholder="John Doe"
+                              className="pl-10"
+                              required
+                            />
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Email Address
+                          </label>
+                          <div className="relative">
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                              <Mail className="h-5 w-5 text-gray-400" />
+                            </div>
+                            <Input
+                              type="email"
+                              name="email"
+                              value={signupForm.email}
+                              onChange={handleSignupChange}
+                              placeholder="your@email.com"
+                              className="pl-10"
+                              required
+                            />
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Phone Number
+                          </label>
+                          <div className="relative">
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                              <Phone className="h-5 w-5 text-gray-400" />
+                            </div>
+                            <Input
+                              type="tel"
+                              name="phone"
+                              value={signupForm.phone}
+                              onChange={handleSignupChange}
+                              placeholder="+91 98xxxxxxxx"
+                              className="pl-10"
+                              required
+                            />
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Password
+                          </label>
+                          <div className="relative">
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                              <Lock className="h-5 w-5 text-gray-400" />
+                            </div>
+                            <Input
+                              type={showPassword ? "text" : "password"}
+                              name="password"
+                              value={signupForm.password}
+                              onChange={handleSignupChange}
+                              placeholder="••••••••••"
+                              className="pl-10 pr-10"
+                              required
+                            />
+                            <button
+                              type="button"
+                              className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                              onClick={() => setShowPassword(!showPassword)}
+                            >
+                              {showPassword ? (
+                                <EyeOffIcon className="h-5 w-5 text-gray-400" />
+                              ) : (
+                                <EyeIcon className="h-5 w-5 text-gray-400" />
+                              )}
+                            </button>
+                          </div>
+                          
+                          <div className="mt-1">
+                            <div className="flex justify-between items-center text-xs">
+                              <span>Password strength:</span>
+                              <span 
+                                className={
+                                  passwordStrength <= 25 ? "text-red-600" :
+                                  passwordStrength <= 50 ? "text-yellow-600" :
+                                  passwordStrength <= 75 ? "text-blue-600" :
+                                  "text-green-600"
+                                }
+                              >
+                                {getPasswordStrengthLabel()}
+                              </span>
+                            </div>
+                            <Progress 
+                              value={passwordStrength} 
+                              className={`h-1 mt-1 ${getPasswordStrengthColor()}`} 
+                            />
+                            
+                            {signupForm.password && (
+                              <div className="grid grid-cols-2 gap-1 mt-2">
+                                <div className="flex items-center text-xs">
+                                  <CheckCircle2 
+                                    className={`h-3 w-3 mr-1 ${
+                                      signupForm.password.length >= 8 ? "text-green-500" : "text-gray-300"
+                                    }`} 
+                                  />
+                                  <span>8+ characters</span>
+                                </div>
+                                <div className="flex items-center text-xs">
+                                  <CheckCircle2 
+                                    className={`h-3 w-3 mr-1 ${
+                                      /[A-Z]/.test(signupForm.password) ? "text-green-500" : "text-gray-300"
+                                    }`} 
+                                  />
+                                  <span>Uppercase</span>
+                                </div>
+                                <div className="flex items-center text-xs">
+                                  <CheckCircle2 
+                                    className={`h-3 w-3 mr-1 ${
+                                      /[0-9]/.test(signupForm.password) ? "text-green-500" : "text-gray-300"
+                                    }`} 
+                                  />
+                                  <span>Number</span>
+                                </div>
+                                <div className="flex items-center text-xs">
+                                  <CheckCircle2 
+                                    className={`h-3 w-3 mr-1 ${
+                                      /[^A-Za-z0-9]/.test(signupForm.password) ? "text-green-500" : "text-gray-300"
+                                    }`} 
+                                  />
+                                  <span>Special char</span>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Confirm Password
+                          </label>
+                          <div className="relative">
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                              <Lock className="h-5 w-5 text-gray-400" />
+                            </div>
+                            <Input
+                              type={showPassword ? "text" : "password"}
+                              name="confirmPassword"
+                              value={signupForm.confirmPassword}
+                              onChange={handleSignupChange}
+                              placeholder="••••••••••"
+                              className="pl-10"
+                              required
+                            />
+                          </div>
+                          {signupForm.password && signupForm.confirmPassword && signupForm.password !== signupForm.confirmPassword && (
+                            <p className="text-xs text-red-600 mt-1">
+                              Passwords do not match
+                            </p>
+                          )}
+                        </div>
+                        
+                        <Button 
+                          type="button"
+                          className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+                          onClick={handleRequestOTP}
+                        >
+                          Request Verification Code <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <div className="bg-green-50 border border-green-200 rounded-md p-4 mb-4">
+                          <div className="flex">
+                            <CheckCircle2 className="h-5 w-5 text-green-400 mr-2" />
+                            <div>
+                              <p className="text-green-700 font-medium">Verification code sent!</p>
+                              <p className="text-green-600 text-sm">
+                                We've sent a 6-digit code to your email and phone number.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Enter Verification Code (OTP)
+                          </label>
+                          <Input
+                            type="text"
+                            name="otp"
+                            value={signupForm.otp}
+                            onChange={handleSignupChange}
+                            placeholder="123456"
+                            className="text-center tracking-widest font-mono text-lg"
+                            maxLength={6}
+                            required
                           />
                         </div>
                         
-                        <div className="pt-2">
-                          <Button 
-                            type="submit" 
-                            className="w-full bg-sweet-600 hover:bg-sweet-700"
-                            disabled={loading}
+                        <div className="flex justify-between text-xs">
+                          <button 
+                            type="button" 
+                            className="text-purple-600 hover:text-purple-500"
+                            onClick={() => setOtpSent(false)}
                           >
-                            {loading ? "Sending OTP..." : "Send OTP"}
-                          </Button>
-                        </div>
-                      </form>
-                    ) : (
-                      <form onSubmit={handleVerifyOTP} className="space-y-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="otp" className="block text-center mb-2">Enter verification code sent to {phone}</Label>
-                          <div className="flex justify-center">
-                            <InputOTP maxLength={6} value={otp} onChange={setOtp}>
-                              <InputOTPGroup>
-                                <InputOTPSlot index={0} />
-                                <InputOTPSlot index={1} />
-                                <InputOTPSlot index={2} />
-                                <InputOTPSlot index={3} />
-                                <InputOTPSlot index={4} />
-                                <InputOTPSlot index={5} />
-                              </InputOTPGroup>
-                            </InputOTP>
-                          </div>
-                          
-                          <p className="text-sm text-center mt-2">
-                            <button 
-                              type="button" 
-                              className="text-sweet-600 hover:underline"
-                              onClick={() => setOtpSent(false)}
-                            >
-                              Change phone number
-                            </button>
-                          </p>
+                            Change Details
+                          </button>
+                          <button 
+                            type="button" 
+                            className="text-purple-600 hover:text-purple-500"
+                          >
+                            Resend Code
+                          </button>
                         </div>
                         
-                        <div className="pt-2">
-                          <Button 
-                            type="submit" 
-                            className="w-full bg-sweet-600 hover:bg-sweet-700"
-                            disabled={loading || otp.length < 6}
-                          >
-                            {loading ? "Verifying..." : "Verify & Continue"}
-                          </Button>
-                        </div>
-                      </form>
+                        <Button 
+                          type="submit"
+                          className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+                        >
+                          Create Account
+                        </Button>
+                      </>
                     )}
-                  </>
-                )}
-                
-                {authMode === "social" && (
-                  <div className="space-y-4">
-                    <Button 
-                      type="button" 
-                      variant="outline" 
-                      className="w-full flex items-center justify-center"
-                      onClick={() => handleSocialAuth("google")}
-                      disabled={loading}
-                    >
-                      <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
-                        <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                        <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                        <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
-                        <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
-                      </svg>
-                      Continue with Google
-                    </Button>
-                    
-                    <Button 
-                      type="button" 
-                      variant="outline" 
-                      className="w-full flex items-center justify-center"
-                      onClick={() => handleSocialAuth("apple")}
-                      disabled={loading}
-                    >
-                      <Apple className="w-5 h-5 mr-2" />
-                      Continue with Apple
-                    </Button>
-                  </div>
-                )}
-              </TabsContent>
-              
-              <TabsContent value="delivery">
-                {authMode === "email" && (
-                  <form onSubmit={handleSignIn} className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="delivery-email">Email</Label>
-                      <Input 
-                        id="delivery-email" 
-                        type="email" 
-                        placeholder="Your email address" 
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required 
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="delivery-password">Password</Label>
-                      <Input 
-                        id="delivery-password" 
-                        type="password" 
-                        placeholder="••••••••" 
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required 
-                      />
-                    </div>
-                    
-                    <div className="pt-2">
-                      <Button 
-                        type="submit" 
-                        className="w-full bg-sweet-600 hover:bg-sweet-700"
-                        disabled={loading}
-                      >
-                        {loading ? `${isSignUp ? "Creating Account..." : "Signing in..."}` : isSignUp ? "Create Account" : "Sign In"}
-                      </Button>
-                    </div>
                   </form>
-                )}
-                
-                {authMode === "phone" && (
-                  <>
-                    {!otpSent ? (
-                      <form onSubmit={handleSendOTP} className="space-y-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="delivery-phone">Phone Number</Label>
-                          <Input 
-                            id="delivery-phone" 
-                            type="tel" 
-                            placeholder="Your registered phone number" 
-                            value={phone}
-                            onChange={(e) => setPhone(e.target.value)}
-                            required 
-                          />
-                        </div>
-                        
-                        <div className="pt-2">
-                          <Button 
-                            type="submit" 
-                            className="w-full bg-sweet-600 hover:bg-sweet-700"
-                            disabled={loading}
-                          >
-                            {loading ? "Sending OTP..." : "Send OTP"}
-                          </Button>
-                        </div>
-                      </form>
-                    ) : (
-                      <form onSubmit={handleVerifyOTP} className="space-y-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="delivery-otp" className="block text-center mb-2">Enter verification code sent to {phone}</Label>
-                          <div className="flex justify-center">
-                            <InputOTP maxLength={6} value={otp} onChange={setOtp}>
-                              <InputOTPGroup>
-                                <InputOTPSlot index={0} />
-                                <InputOTPSlot index={1} />
-                                <InputOTPSlot index={2} />
-                                <InputOTPSlot index={3} />
-                                <InputOTPSlot index={4} />
-                                <InputOTPSlot index={5} />
-                              </InputOTPGroup>
-                            </InputOTP>
-                          </div>
-                          
-                          <p className="text-sm text-center mt-2">
-                            <button 
-                              type="button" 
-                              className="text-sweet-600 hover:underline"
-                              onClick={() => setOtpSent(false)}
-                            >
-                              Change phone number
-                            </button>
-                          </p>
-                        </div>
-                        
-                        <div className="pt-2">
-                          <Button 
-                            type="submit" 
-                            className="w-full bg-sweet-600 hover:bg-sweet-700"
-                            disabled={loading || otp.length < 6}
-                          >
-                            {loading ? "Verifying..." : "Verify & Continue"}
-                          </Button>
-                        </div>
-                      </form>
-                    )}
-                  </>
-                )}
-                
-                {authMode === "social" && (
-                  <div className="space-y-4">
-                    <Button 
-                      type="button" 
-                      variant="outline" 
-                      className="w-full flex items-center justify-center"
-                      onClick={() => handleSocialAuth("google")}
-                      disabled={loading}
-                    >
-                      <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
-                        <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                        <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                        <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
-                        <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
-                      </svg>
-                      Continue with Google
-                    </Button>
-                    
-                    <Button 
-                      type="button" 
-                      variant="outline" 
-                      className="w-full flex items-center justify-center"
-                      onClick={() => handleSocialAuth("apple")}
-                      disabled={loading}
-                    >
-                      <Apple className="w-5 h-5 mr-2" />
-                      Continue with Apple
-                    </Button>
-                  </div>
-                )}
-                
-                <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
-                  <h3 className="font-medium text-gray-800">Delivery Partner Benefits:</h3>
-                  <ul className="text-sm text-gray-600 list-disc pl-5 mt-2">
-                    <li>₹6 per kilometer incentive</li>
-                    <li>Real-time delivery tracking</li>
-                    <li>Flexible working hours</li>
-                    <li>Weekly payments</li>
-                  </ul>
-                </div>
-              </TabsContent>
+                </TabsContent>
+              </div>
             </Tabs>
-          </div>
+          </CardContent>
+        </Card>
+        
+        <div className="text-center text-sm text-gray-600">
+          By signing in or creating an account, you agree to our{" "}
+          <a href="#" className="text-purple-600 hover:text-purple-500">
+            Terms of Service
+          </a>{" "}
+          and{" "}
+          <a href="#" className="text-purple-600 hover:text-purple-500">
+            Privacy Policy
+          </a>.
         </div>
-      </main>
-      
-      <Footer />
+      </div>
     </div>
   );
 };

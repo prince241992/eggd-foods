@@ -46,7 +46,7 @@ const HeroSection = () => {
               <span className="font-bold text-sweet-600">Open Hours:</span> Monday to Sunday, 11AM to 3AM
             </p>
             <p className="text-gray-700 font-medium mt-1">
-              <span className="font-bold text-sweet-600">Currently serving:</span> INDORE, VADODARA
+              <span className="font-bold text-sweet-600">Currently serving:</span> INDORE
             </p>
           </div>
         </div>
@@ -74,7 +74,7 @@ const HeroSection = () => {
           {[
             { label: "Farm Fresh Eggs", value: "100%" },
             { label: "Made Fresh Daily", value: "Guaranteed" },
-            { label: "Delivery Areas", value: "3 Cities" },
+            { label: "Delivery Areas", value: "1 City" },
             { label: "Satisfied Customers", value: "10,000+" }
           ].map((stat, index) => (
             <div key={index} className="text-center">
