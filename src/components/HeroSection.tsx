@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -21,7 +20,7 @@ const HeroSection = () => {
       <div className="container-custom grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
         <div className="space-y-6 max-w-lg">
           <span className="inline-block bg-sweet-100 text-sweet-800 px-4 py-1 rounded-full text-sm font-medium">Epic Egg Adventures! 🍳</span>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display leading-tight">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-sivana leading-tight">
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-purple-600">Egg'd <span className="mx-1">Foods</span></span> Your Craving, Our Creation!
           </h1>
           <p className="text-gray-600 text-lg">

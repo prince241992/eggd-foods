@@ -2,23 +2,23 @@
 const testimonials = [
   {
     id: 1,
-    content: "The sweets from SweetHub remind me of the ones my grandmother used to make. So authentic and delicious!",
+    content: "The Classic Shakshuka at Egg'd Foods is an absolute delight! The perfectly poached eggs in that spicy tomato sauce make every morning special.",
     author: "Priya Sharma",
-    role: "Regular Customer",
+    role: "Food Blogger",
     avatar: "https://randomuser.me/api/portraits/women/65.jpg"
   },
   {
     id: 2,
-    content: "I ordered a gift box for Diwali and everyone loved it! The packaging was beautiful and the sweets were fresh and tasty.",
+    content: "Their Egg Fried Rice is unmatched! The wok-tossed eggs with fragrant rice and secret spices make it my go-to comfort food.",
     author: "Rahul Patel",
-    role: "Verified Buyer",
+    role: "Regular Customer",
     avatar: "https://randomuser.me/api/portraits/men/32.jpg"
   },
   {
     id: 3,
-    content: "Fast delivery and exceptional quality. Their Kaju Katli is the best I've had outside of India!",
+    content: "The Egg Benedict here is pure perfection. The hollandaise sauce is creamy, and the eggs are always poached to perfection. Worth every penny!",
     author: "Anjali Mehta",
-    role: "Food Blogger",
+    role: "Food Critic",
     avatar: "https://randomuser.me/api/portraits/women/44.jpg"
   }
 ];

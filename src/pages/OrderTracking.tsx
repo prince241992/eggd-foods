@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -29,9 +28,9 @@ const OrderTracking = () => {
     // Simulate API call
     setTimeout(() => {
       // Demo order data
-      if (orderNumber.toLowerCase() === "ord-2025-0419-001") {
+      if (orderNumber.toLowerCase() === "egg-2025-0419-001") {
         setTrackingResult({
-          id: "ORD-2025-0419-001",
+          id: "EGG-2025-0419-001",
           customerName: "Amit Kumar",
           status: "picked",
           timeStamps: {
@@ -94,7 +93,7 @@ const OrderTracking = () => {
             <div className="flex gap-3">
               <Input 
                 type="text"
-                placeholder="Enter your order number (e.g., ORD-2025-0419-001)"
+                placeholder="Enter your order number (e.g., EGG-2025-0419-001)"
                 value={orderNumber}
                 onChange={(e) => setOrderNumber(e.target.value)}
                 className="flex-grow"

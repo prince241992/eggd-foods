@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -15,6 +14,7 @@ import Account from "./pages/Account";
 import DeliveryDashboard from "./pages/DeliveryDashboard";
 import OrderTracking from "./pages/OrderTracking";
 import NotFound from "./pages/NotFound";
+import DeliveryAgentSignIn from "./pages/DeliveryAgentSignIn";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +32,7 @@ const App = () => (
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/signin" element={<SignIn />} />
+          <Route path="/delivery-signin" element={<DeliveryAgentSignIn />} />
           <Route path="/delivery-dashboard" element={<DeliveryDashboard />} />
           <Route path="/track-order" element={<OrderTracking />} />
           <Route path="*" element={<NotFound />} />
