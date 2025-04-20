@@ -3,17 +3,19 @@ import { CreditCard, Gift, Crown } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 
 interface LoyaltyCardProps {
-  customerName: string;
+  customerName?: string;
   points: number;
-  memberSince: string;
-  tier: "Bronze" | "Silver" | "Gold";
+  memberSince?: string;
+  tier?: "Bronze" | "Silver" | "Gold";
+  referrals?: number;
 }
 
 const LoyaltyCard = ({ 
   customerName = "John Doe", 
   points = 250, 
   memberSince = "April 2025",
-  tier = "Bronze"
+  tier = "Bronze",
+  referrals = 0
 }: LoyaltyCardProps) => {
   const maxPoints = 1000;
   const percentage = (points / maxPoints) * 100;
@@ -63,6 +65,12 @@ const LoyaltyCard = ({
         <Progress value={percentage} className="h-2 bg-white bg-opacity-30" />
         <p className="text-xs mt-2 text-white">Earn 1 point for every ₹10 spent. Reach 1000 points for 1 year of free delivery!</p>
       </div>
+      
+      {referrals > 0 && (
+        <div className="mt-2 text-white">
+          <p className="text-xs">Successful referrals: {referrals}</p>
+        </div>
+      )}
       
       <div className="mt-4 flex items-center">
         <Gift className="h-4 w-4 mr-1 text-white" />
