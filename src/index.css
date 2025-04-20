@@ -45,6 +45,11 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    
+    /* Funky theme colors */
+    --funky-purple: 270 70% 60%;
+    --funky-pink: 330 80% 60%;
+    --funky-blue: 220 70% 60%;
   }
 
   .dark {
@@ -98,14 +103,50 @@
 
 @layer components {
   .gradient-text {
-    @apply bg-gradient-to-r from-spice-500 via-sweet-500 to-spice-500 inline-block text-transparent bg-clip-text;
+    @apply bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 inline-block text-transparent bg-clip-text;
   }
   
   .btn-primary {
-    @apply bg-sweet-600 hover:bg-sweet-700 text-white px-6 py-3 rounded-md font-medium transition-all duration-300 shadow-md hover:shadow-lg;
+    @apply bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-6 py-3 rounded-md font-medium transition-all duration-300 shadow-md hover:shadow-lg;
   }
   
   .container-custom {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
+  
+  /* Funky card style */
+  .funky-card {
+    @apply bg-gradient-to-br from-white to-purple-50 border-purple-200 hover:shadow-lg transition-all duration-300 overflow-hidden;
+  }
+  
+  /* Funky button style */
+  .funky-btn {
+    @apply bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white transition-all duration-300;
+  }
+  
+  /* Funky animation */
+  .funky-hover {
+    @apply transition-transform duration-300 hover:scale-105;
+  }
+  
+  /* Funky text style */
+  .funky-text {
+    @apply bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 inline-block text-transparent bg-clip-text;
+  }
+}
+
+/* Custom animations */
+@keyframes pulse-funky {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+.animate-pulse-funky {
+  animation: pulse-funky 2s ease-in-out infinite;
 }

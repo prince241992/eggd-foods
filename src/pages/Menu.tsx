@@ -22,28 +22,28 @@ const Menu = () => {
       <Navbar />
       
       <main className="flex-grow">
-        <div className="py-16 bg-cream-50">
+        <div className="py-16 bg-gradient-to-br from-purple-100 to-pink-100">
           <div className="container-custom">
             <h1 className="text-4xl md:text-5xl font-bold font-display mb-4 text-center">
-              Our <span className="gradient-text">Menu</span>
+              Our <span className="bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 text-transparent bg-clip-text">Menu</span>
             </h1>
             <p className="text-gray-600 text-center max-w-2xl mx-auto mb-8">
               Explore our wide range of delicious egg-based recipes, crafted with farm-fresh ingredients and culinary expertise.
             </p>
             
             <div className="flex justify-center mb-4">
-              <div className="inline-flex rounded-md border">
+              <div className="inline-flex rounded-md border border-purple-200 shadow-md overflow-hidden">
                 <Button 
                   variant={!showGalleryView ? "default" : "outline"} 
                   onClick={() => setShowGalleryView(false)}
-                  className="rounded-r-none"
+                  className={!showGalleryView ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-r-none" : "rounded-r-none"}
                 >
                   Classic View
                 </Button>
                 <Button 
                   variant={showGalleryView ? "default" : "outline"} 
                   onClick={() => setShowGalleryView(true)}
-                  className="rounded-l-none"
+                  className={showGalleryView ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-l-none" : "rounded-l-none"}
                 >
                   Gallery View
                 </Button>
@@ -71,7 +71,7 @@ const Menu = () => {
                 <ProductList items={filteredItems} />
                 
                 <div className="text-center mt-12">
-                  <Button className="bg-sweet-600 hover:bg-sweet-700">Place an Order</Button>
+                  <Button className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 shadow-lg">Place an Order</Button>
                 </div>
               </>
             )}

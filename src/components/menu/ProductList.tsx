@@ -5,13 +5,18 @@ import { MenuItem } from "@/data/menuData";
 import { Card } from "@/components/ui/card";
 import { Heart, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 interface ProductListProps {
   items: MenuItem[];
 }
 
+// Create a global cart context to share cart state across components
+export const cartItems = new Map();
+
 const ProductList = ({ items }: ProductListProps) => {
   const [favorites, setFavorites] = useState<number[]>([]);
+  const { toast } = useToast();
 
   const toggleFavorite = (id: number) => {
     setFavorites(prev => 
@@ -19,6 +24,36 @@ const ProductList = ({ items }: ProductListProps) => {
         ? prev.filter(itemId => itemId !== id)
         : [...prev, id]
     );
+  };
+
+  const addToCart = (item: MenuItem) => {
+    // Check if item already exists in cart
+    if (cartItems.has(item.id)) {
+      // Increment quantity
+      const existingItem = cartItems.get(item.id);
+      existingItem.quantity += 1;
+      cartItems.set(item.id, existingItem);
+    } else {
+      // Add new item
+      cartItems.set(item.id, {
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: 1,
+        image: item.image,
+        addOns: []
+      });
+    }
+    
+    // Show toast notification
+    toast({
+      title: "Added to cart",
+      description: `${item.name} has been added to your cart.`,
+      duration: 2000,
+    });
+    
+    // Force a re-render of the cart component
+    window.dispatchEvent(new CustomEvent('cart-updated'));
   };
 
   return (
@@ -69,10 +104,11 @@ const ProductList = ({ items }: ProductListProps) => {
               )}
               
               <div className="flex justify-between items-end mt-auto">
-                <span className="text-lg font-bold text-green-600">₹{item.price}</span>
+                <span className="text-lg font-bold text-green-600">{item.price}</span>
                 <Button 
                   size="sm"
                   className="bg-sweet-600 hover:bg-sweet-700"
+                  onClick={() => addToCart(item)}
                 >
                   <ShoppingCart size={16} className="mr-2" />
                   Add to Cart
