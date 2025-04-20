@@ -1,27 +1,35 @@
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { EyeIcon, EyeOffIcon, Mail, Lock, User, Phone, ArrowRight, CheckCircle2 } from "lucide-react";
+import { EyeIcon, EyeOffIcon, Mail, Lock, User, Phone, ArrowRight, CheckCircle2, Calendar, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 
 const SignIn = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState<"signin" | "signup">("signin");
+  const [userType, setUserType] = useState<"customer" | "delivery">("customer");
   const [showPassword, setShowPassword] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
   
   // Form states
-  const [signinForm, setSigninForm] = useState({ email: "", password: "" });
+  const [signinForm, setSigninForm] = useState({ 
+    email: "", 
+    password: "",
+  });
+  
   const [signupForm, setSignupForm] = useState({
     name: "",
     email: "",
     phone: "",
+    birthdate: "",
     password: "",
     confirmPassword: "",
     otp: ""
@@ -90,16 +98,34 @@ const SignIn = () => {
       duration: 2000
     });
     
-    navigate("/account");
+    // Redirect based on user type
+    if (userType === "delivery") {
+      navigate("/delivery-dashboard");
+    } else {
+      navigate("/account");
+    }
   };
   
   // Handle OTP request for sign-up
   const handleRequestOTP = () => {
     // Validate form fields
-    if (!signupForm.name || !signupForm.email || !signupForm.phone || !signupForm.password || !signupForm.confirmPassword) {
+    if (!signupForm.name || !signupForm.email || !signupForm.phone || !signupForm.password || !signupForm.confirmPassword || !signupForm.birthdate) {
       toast({
         title: "Error",
-        description: "Please fill in all fields",
+        description: "Please fill in all fields including birthdate",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Check if birthdate is valid
+    const birthDate = new Date(signupForm.birthdate);
+    const today = new Date();
+    const age = today.getFullYear() - birthDate.getFullYear();
+    if (isNaN(birthDate.getTime()) || age < 13) {
+      toast({
+        title: "Error",
+        description: "Please enter a valid birthdate. You must be at least 13 years old.",
         variant: "destructive"
       });
       return;
@@ -154,11 +180,15 @@ const SignIn = () => {
       duration: 2000
     });
     
-    navigate("/account");
+    if (userType === "delivery") {
+      navigate("/delivery-dashboard");
+    } else {
+      navigate("/account");
+    }
   };
   
   return (
-    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-purple-50 to-pink-50">
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-purple-100 to-pink-100">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 font-display">
@@ -183,6 +213,31 @@ const SignIn = () => {
               </TabsList>
               
               <div className="p-6">
+                {/* User Type Selection */}
+                <div className="mb-6">
+                  <div className="text-sm font-medium text-gray-700 mb-2">I am a:</div>
+                  <RadioGroup 
+                    value={userType} 
+                    onValueChange={(value) => setUserType(value as "customer" | "delivery")}
+                    className="flex space-x-4"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="customer" id="customer" />
+                      <Label htmlFor="customer" className="flex items-center">
+                        <User className="mr-1 h-4 w-4" />
+                        Customer
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="delivery" id="delivery" />
+                      <Label htmlFor="delivery" className="flex items-center">
+                        <Truck className="mr-1 h-4 w-4" />
+                        Delivery Agent
+                      </Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+
                 {/* Sign In Form */}
                 <TabsContent value="signin">
                   <form onSubmit={handleSignin} className="space-y-4">
@@ -246,7 +301,7 @@ const SignIn = () => {
                       type="submit"
                       className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
                     >
-                      Sign In
+                      {userType === "customer" ? "Sign In" : "Sign In as Delivery Agent"}
                     </Button>
                   </form>
                 </TabsContent>
@@ -314,6 +369,28 @@ const SignIn = () => {
                               required
                             />
                           </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Date of Birth
+                          </label>
+                          <div className="relative">
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                              <Calendar className="h-5 w-5 text-gray-400" />
+                            </div>
+                            <Input
+                              type="date"
+                              name="birthdate"
+                              value={signupForm.birthdate}
+                              onChange={handleSignupChange}
+                              className="pl-10"
+                              required
+                            />
+                          </div>
+                          <p className="text-xs text-gray-500 mt-1">
+                            Your birthdate will be used for birthday specials and can't be changed later
+                          </p>
                         </div>
                         
                         <div>

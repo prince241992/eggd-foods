@@ -2,16 +2,13 @@
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Button } from "@/components/ui/button";
 import MenuCategories from "@/components/menu/MenuCategories";
-import ProductList from "@/components/menu/ProductList";
 import { menuItems } from "@/data/menuData";
 import ProductGallery from "@/components/ProductGallery";
 
 const Menu = () => {
   const [activeCategory, setActiveCategory] = useState('all');
-  const [showGalleryView, setShowGalleryView] = useState(false);
-  const [cardStyle, setCardStyle] = useState<"default" | "modern" | "minimal" | "detailed">("minimal");
+  const [cardStyle, setCardStyle] = useState<"default" | "modern" | "minimal" | "detailed">("detailed");
   
   const filteredItems = activeCategory === 'all' 
     ? menuItems 
@@ -31,25 +28,6 @@ const Menu = () => {
               Explore our wide range of delicious egg-based recipes, crafted with farm-fresh ingredients and culinary expertise.
             </p>
             
-            <div className="flex justify-center mb-4">
-              <div className="inline-flex rounded-md border border-purple-200 shadow-md overflow-hidden">
-                <Button 
-                  variant={!showGalleryView ? "default" : "outline"} 
-                  onClick={() => setShowGalleryView(false)}
-                  className={!showGalleryView ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-r-none" : "rounded-r-none"}
-                >
-                  Classic View
-                </Button>
-                <Button 
-                  variant={showGalleryView ? "default" : "outline"} 
-                  onClick={() => setShowGalleryView(true)}
-                  className={showGalleryView ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-l-none" : "rounded-l-none"}
-                >
-                  Gallery View
-                </Button>
-              </div>
-            </div>
-            
             <MenuCategories 
               activeCategory={activeCategory} 
               onCategoryChange={setActiveCategory} 
@@ -59,22 +37,12 @@ const Menu = () => {
         
         <section className="py-16 bg-white">
           <div className="container-custom">
-            {showGalleryView ? (
-              <ProductGallery 
-                title="" 
-                initialProducts={filteredItems}
-                showNutrition={true}
-                cardStyle={cardStyle}
-              />
-            ) : (
-              <>
-                <ProductList items={filteredItems} />
-                
-                <div className="text-center mt-12">
-                  <Button className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 shadow-lg">Place an Order</Button>
-                </div>
-              </>
-            )}
+            <ProductGallery 
+              title="" 
+              initialProducts={filteredItems}
+              showNutrition={true}
+              cardStyle={cardStyle}
+            />
           </div>
         </section>
       </main>

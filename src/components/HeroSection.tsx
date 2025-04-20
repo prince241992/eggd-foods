@@ -17,36 +17,36 @@ const HeroSection = () => {
   };
   
   return (
-    <div className="relative overflow-hidden bg-gradient-to-r from-cream-50 to-cream-100 py-16 md:py-24">
+    <div className="relative overflow-hidden bg-gradient-to-r from-purple-200 to-pink-100 py-16 md:py-24">
       <div className="container-custom grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
         <div className="space-y-6 max-w-lg">
           <span className="inline-block bg-sweet-100 text-sweet-800 px-4 py-1 rounded-full text-sm font-medium">Epic Egg Adventures! 🍳</span>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display leading-tight">
-            <span className="gradient-text">Egg'd <span className="mx-1">Foods</span></span> Your Craving, Our Creation!
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-purple-600">Egg'd <span className="mx-1">Foods</span></span> Your Craving, Our Creation!
           </h1>
           <p className="text-gray-600 text-lg">
             Level up your meals with our insanely delicious egg creations! From classic breakfast vibes to mind-blowing fusion dishes, we're here to satisfy your egg-venture cravings. 🔥
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Button 
-              className="bg-sweet-600 hover:bg-sweet-700 text-lg h-12 px-8"
+              className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-lg h-12 px-8 shadow-lg"
               onClick={handleOrderNow}
             >
               Order Now
             </Button>
             <Link to="/menu">
-              <Button variant="outline" className="border-sweet-500 text-sweet-600 hover:bg-sweet-50 text-lg h-12 px-8">
+              <Button variant="outline" className="border-purple-500 text-purple-600 hover:bg-purple-50 text-lg h-12 px-8 shadow-md">
                 View Menu
               </Button>
             </Link>
           </div>
           
-          <div className="bg-sweet-50 p-4 rounded-lg border border-sweet-100">
+          <div className="bg-white bg-opacity-80 p-4 rounded-lg border border-purple-200 shadow-md">
             <p className="text-gray-700 font-medium">
-              <span className="font-bold text-sweet-600">Open Hours:</span> Monday to Sunday, 11AM to 3AM
+              <span className="font-bold text-purple-600">Open Hours:</span> Monday to Sunday, 11AM to 3AM
             </p>
             <p className="text-gray-700 font-medium mt-1">
-              <span className="font-bold text-sweet-600">Currently serving:</span> INDORE
+              <span className="font-bold text-purple-600">Currently serving:</span> VADODARA & INDORE
             </p>
           </div>
         </div>

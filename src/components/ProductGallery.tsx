@@ -4,9 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { ChevronLeft, ChevronRight, Expand, Heart, Filter, SlidersHorizontal, Grid2X2, List } from "lucide-react";
+import { ChevronLeft, ChevronRight, Filter, SlidersHorizontal, Grid2X2, List, Plus, Check, ShoppingCart } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
 import ProductCardAlternate from "@/components/ProductCardAlternate";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
+import { cartItems } from "@/components/menu/ProductList";
 
 const demoProducts = [
   {
@@ -104,9 +108,11 @@ const ProductGallery = ({
 }: ProductGalleryProps) => {
   const [products, setProducts] = useState(initialProducts);
   const [currentPage, setCurrentPage] = useState(1);
-  const [viewMode, setViewMode] = useState<"grid" | "list">(initialViewMode);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [cardStyle, setCardStyle] = useState<"default" | "modern" | "minimal" | "detailed">(initialCardStyle);
   const [favorites, setFavorites] = useState<number[]>([]);
+  const [selectedAddOns, setSelectedAddOns] = useState<Record<number, string[]>>({});
+  const { toast } = useToast();
   
   const productsPerPage = 8;
   const totalPages = Math.ceil(products.length / productsPerPage);
@@ -130,6 +136,81 @@ const ProductGallery = ({
   const cardSizeClasses = viewMode === "grid" 
     ? "sm:w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-3" 
     : "w-full mb-4";
+    
+  const handleAddOnToggle = (productId: number, addOnName: string) => {
+    setSelectedAddOns(prev => {
+      const currentAddOns = prev[productId] || [];
+      
+      if (currentAddOns.includes(addOnName)) {
+        return {
+          ...prev,
+          [productId]: currentAddOns.filter(name => name !== addOnName)
+        };
+      } else {
+        return {
+          ...prev,
+          [productId]: [...currentAddOns, addOnName]
+        };
+      }
+    });
+  };
+  
+  const getPriceFromString = (priceStr: string) => {
+    return parseFloat(priceStr.replace('₹', ''));
+  };
+  
+  const addToCart = (product: any) => {
+    const productAddOns = selectedAddOns[product.id] || [];
+    let addOnsList = [];
+    let totalPrice = getPriceFromString(product.price);
+    
+    if (productAddOns.length > 0 && product.addOns) {
+      addOnsList = product.addOns
+        .filter(addOn => productAddOns.includes(addOn.name))
+        .map(addOn => {
+          totalPrice += getPriceFromString(addOn.price);
+          return {
+            name: addOn.name,
+            price: addOn.price
+          };
+        });
+    }
+    
+    // Check if item already exists in cart
+    if (cartItems.has(product.id)) {
+      // Increment quantity
+      const existingItem = cartItems.get(product.id);
+      existingItem.quantity += 1;
+      existingItem.addOns = [...existingItem.addOns, ...addOnsList];
+      cartItems.set(product.id, existingItem);
+    } else {
+      // Add new item
+      cartItems.set(product.id, {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        quantity: 1,
+        image: product.image,
+        addOns: addOnsList
+      });
+    }
+    
+    // Show toast notification
+    toast({
+      title: "Added to cart",
+      description: `${product.name} ${productAddOns.length > 0 ? 'with add-ons' : ''} has been added to your cart.`,
+      duration: 2000,
+    });
+    
+    // Force a re-render of the cart component
+    window.dispatchEvent(new CustomEvent('cart-updated'));
+    
+    // Reset selected add-ons for this product
+    setSelectedAddOns(prev => ({
+      ...prev,
+      [product.id]: []
+    }));
+  };
   
   return (
     <div className="container-custom py-12">
@@ -140,15 +221,6 @@ const ProductGallery = ({
         </div>
         
         <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            title={viewMode === "grid" ? "Switch to List View" : "Switch to Grid View"}
-            onClick={toggleViewMode}
-          >
-            {viewMode === "grid" ? <List size={18} /> : <Grid2X2 size={18} />}
-          </Button>
-          
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="outline" size="sm">
@@ -206,28 +278,68 @@ const ProductGallery = ({
         <div className={`flex flex-wrap -mx-3 ${viewMode === "list" ? "flex-col" : ""}`}>
           {currentProducts.map((product) => (
             <div key={product.id} className={cardSizeClasses}>
-              {cardStyle === "default" ? (
-                <ProductCard
-                  name={product.name}
-                  description={product.description}
-                  price={product.price}
-                  image={product.image}
-                  popular={product.popular}
-                  addOns={product.addOns}
-                />
-              ) : (
-                <ProductCardAlternate
-                  name={product.name}
-                  description={product.description}
-                  price={product.price}
-                  image={product.image}
-                  popular={product.popular}
-                  addOns={product.addOns}
-                  style={cardStyle === "modern" ? "modern" : cardStyle === "minimal" ? "minimal" : "detailed"}
-                  showNutrition={showNutrition && cardStyle === "detailed"}
-                  nutritionInfo={product.nutritionInfo}
-                />
-              )}
+              <Card className="h-full flex flex-col overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                <div className="relative">
+                  <img 
+                    src={product.image} 
+                    alt={product.name}
+                    className="h-48 w-full object-cover"
+                  />
+                  {product.popular && (
+                    <div className="absolute top-2 right-2 bg-gradient-to-r from-purple-600 to-pink-500 text-white text-xs font-medium px-2 py-1 rounded-full">
+                      Popular
+                    </div>
+                  )}
+                </div>
+                
+                <CardContent className="p-4 flex-grow flex flex-col">
+                  <div className="mb-2">
+                    <h3 className="font-bold text-lg">{product.name}</h3>
+                    <p className="text-gray-600 text-sm line-clamp-2">{product.description}</p>
+                  </div>
+                  
+                  <div className="mt-2 mb-3">
+                    <div className="text-purple-600 font-bold text-lg">{product.price}</div>
+                  </div>
+                  
+                  {showNutrition && product.nutritionInfo && (
+                    <div className="bg-gray-50 p-2 rounded text-xs mb-3 grid grid-cols-2 gap-y-1">
+                      <div>Calories: {product.nutritionInfo.calories}</div>
+                      <div>Protein: {product.nutritionInfo.protein}</div>
+                      <div>Carbs: {product.nutritionInfo.carbs}</div>
+                      <div>Fat: {product.nutritionInfo.fat}</div>
+                    </div>
+                  )}
+                  
+                  {product.addOns && product.addOns.length > 0 && (
+                    <div className="mt-2 mb-4">
+                      <p className="font-medium text-sm mb-1">Add-ons:</p>
+                      <div className="space-y-2">
+                        {product.addOns.map((addOn, idx) => (
+                          <div key={idx} className="flex items-center space-x-2">
+                            <Checkbox 
+                              id={`${product.id}-${idx}`} 
+                              checked={selectedAddOns[product.id]?.includes(addOn.name)}
+                              onCheckedChange={() => handleAddOnToggle(product.id, addOn.name)}
+                            />
+                            <Label htmlFor={`${product.id}-${idx}`} className="flex justify-between w-full text-sm">
+                              <span>{addOn.name}</span>
+                              <span className="text-gray-600">{addOn.price}</span>
+                            </Label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  <Button 
+                    onClick={() => addToCart(product)} 
+                    className="mt-auto w-full bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600"
+                  >
+                    <ShoppingCart size={18} className="mr-2" /> Add to Cart
+                  </Button>
+                </CardContent>
+              </Card>
             </div>
           ))}
         </div>

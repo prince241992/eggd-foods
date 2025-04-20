@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -33,7 +32,7 @@ interface DeliveryOrder {
 const DeliveryDashboard = () => {
   const [activeOrders, setActiveOrders] = useState<DeliveryOrder[]>([
     {
-      id: "ORD-2025-0419-001",
+      id: "EGG-2025-0419-001",
       customerName: "Amit Kumar",
       address: "123 Park Street, Sector 18, Noida",
       items: ["Egg Curry", "Deviled Eggs", "Fluffy Omelette"],
@@ -45,7 +44,7 @@ const DeliveryDashboard = () => {
       timestamp: "2025-04-19T10:15:00Z"
     },
     {
-      id: "ORD-2025-0419-002",
+      id: "EGG-2025-0419-002",
       customerName: "Priya Sharma",
       address: "456 MG Road, Gurugram",
       items: ["Egg Fried Rice", "Egg Breakfast Box"],
@@ -57,7 +56,7 @@ const DeliveryDashboard = () => {
       timestamp: "2025-04-19T09:30:00Z"
     },
     {
-      id: "ORD-2025-0419-003",
+      id: "EGG-2025-0419-003",
       customerName: "Rahul Verma",
       address: "789 Andheri East, Mumbai",
       items: ["Deviled Eggs Deluxe", "Classic Shakshuka", "Coffee"],
@@ -65,15 +64,13 @@ const DeliveryDashboard = () => {
       estimatedEarning: 5.1 * 6, // ₹6 per km
       status: "pending",
       phone: "+91 87654-32109",
-      branchId: "branch-2",
+      branchId: "branch-1",
       timestamp: "2025-04-19T11:05:00Z"
     }
   ]);
 
   const [branches, setBranches] = useState<DeliveryBranch[]>([
-    { id: "branch-1", name: "Central Kitchen", address: "123 Main Street, Delhi", isActive: true },
-    { id: "branch-2", name: "Mumbai Branch", address: "456 Marine Drive, Mumbai", isActive: true },
-    { id: "branch-3", name: "Bangalore Branch", address: "789 MG Road, Bangalore", isActive: false }
+    { id: "branch-1", name: "Indore Branch", address: "123 Main Street, Indore", isActive: true },
   ]);
 
   const [selectedBranch, setSelectedBranch] = useState<string>("branch-1");
@@ -84,7 +81,7 @@ const DeliveryDashboard = () => {
     // Simulate a new order coming in after 10 seconds
     const timer = setTimeout(() => {
       const newOrder: DeliveryOrder = {
-        id: "ORD-2025-0419-004",
+        id: "EGG-2025-0419-004",
         customerName: "Sandeep Singh",
         address: "101 Connaught Place, New Delhi",
         items: ["Classic Shakshuka", "Breakfast Platter", "Orange Juice"],
@@ -160,34 +157,9 @@ const DeliveryDashboard = () => {
               <p className="text-gray-600">Manage deliveries and track earnings</p>
             </div>
             
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="outline" className="flex items-center gap-2">
-                  <span>{selectedBranchName}</span>
-                  <ChevronDown size={16} />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-60">
-                <div className="space-y-2">
-                  <h3 className="font-medium">Select Branch</h3>
-                  <RadioGroup 
-                    value={selectedBranch}
-                    onValueChange={setSelectedBranch}
-                    className="gap-2"
-                  >
-                    {activeOrOrderedBranches.map(branch => (
-                      <div key={branch.id} className="flex items-center space-x-2">
-                        <RadioGroupItem value={branch.id} id={branch.id} />
-                        <Label htmlFor={branch.id} className="flex flex-col">
-                          <span>{branch.name}</span>
-                          <span className="text-xs text-gray-500">{branch.address}</span>
-                        </Label>
-                      </div>
-                    ))}
-                  </RadioGroup>
-                </div>
-              </PopoverContent>
-            </Popover>
+            <Button variant="outline" className="flex items-center gap-2">
+              <span>Indore Branch</span>
+            </Button>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-8">
@@ -248,7 +220,7 @@ const DeliveryDashboard = () => {
                       <div>
                         <div className="flex items-center gap-2 mb-1">
                           <h3 className="font-bold text-lg">{order.customerName}</h3>
-                          {newOrderAlert && order.id === "ORD-2025-0419-004" && (
+                          {newOrderAlert && order.id === "EGG-2025-0419-004" && (
                             <span className="bg-red-100 text-red-600 text-xs font-medium px-2 py-1 rounded-md animate-pulse">
                               New
                             </span>
@@ -346,7 +318,7 @@ const DeliveryDashboard = () => {
               <div className="bg-white rounded-lg shadow-md p-8 text-center">
                 <AlertCircle className="mx-auto h-12 w-12 text-gray-400 mb-3" />
                 <p className="text-gray-600 font-medium">No active orders for this branch.</p>
-                <p className="text-sm text-gray-500 mt-1">Select a different branch or check back later.</p>
+                <p className="text-sm text-gray-500 mt-1">Check back later for new orders.</p>
               </div>
             )}
           </div>
