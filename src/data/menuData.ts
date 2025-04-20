@@ -1,3 +1,4 @@
+
 export const standardAddOns = [
   { name: "Prepare with Oil", price: "₹0" },
   { name: "Prepare with Butter", price: "₹60" },
@@ -14,6 +15,12 @@ export interface MenuItem {
   category: string;
   addOns: { name: string; price: string; }[];
   popular?: boolean;
+  nutritionInfo?: {
+    calories: string;
+    protein: string;
+    carbs: string;
+    fat: string;
+  };
 }
 
 export interface MenuCategory {
