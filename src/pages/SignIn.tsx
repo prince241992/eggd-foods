@@ -1,21 +1,18 @@
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { EyeIcon, EyeOffIcon, Mail, Lock, User, Phone, ArrowRight, CheckCircle2, Calendar, Truck } from "lucide-react";
+import { EyeIcon, EyeOffIcon, Mail, Lock, User, Phone, ArrowRight, CheckCircle2, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
 
 const SignIn = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState<"signin" | "signup">("signin");
-  const [userType, setUserType] = useState<"customer" | "delivery">("customer");
   const [showPassword, setShowPassword] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
   
@@ -98,12 +95,7 @@ const SignIn = () => {
       duration: 2000
     });
     
-    // Redirect based on user type
-    if (userType === "delivery") {
-      navigate("/delivery-dashboard");
-    } else {
-      navigate("/account");
-    }
+    navigate("/account");
   };
   
   // Handle OTP request for sign-up
@@ -180,11 +172,7 @@ const SignIn = () => {
       duration: 2000
     });
     
-    if (userType === "delivery") {
-      navigate("/delivery-dashboard");
-    } else {
-      navigate("/account");
-    }
+    navigate("/account");
   };
   
   return (
@@ -213,31 +201,6 @@ const SignIn = () => {
               </TabsList>
               
               <div className="p-6">
-                {/* User Type Selection */}
-                <div className="mb-6">
-                  <div className="text-sm font-medium text-gray-700 mb-2">I am a:</div>
-                  <RadioGroup 
-                    value={userType} 
-                    onValueChange={(value) => setUserType(value as "customer" | "delivery")}
-                    className="flex space-x-4"
-                  >
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="customer" id="customer" />
-                      <Label htmlFor="customer" className="flex items-center">
-                        <User className="mr-1 h-4 w-4" />
-                        Customer
-                      </Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="delivery" id="delivery" />
-                      <Label htmlFor="delivery" className="flex items-center">
-                        <Truck className="mr-1 h-4 w-4" />
-                        Delivery Agent
-                      </Label>
-                    </div>
-                  </RadioGroup>
-                </div>
-
                 {/* Sign In Form */}
                 <TabsContent value="signin">
                   <form onSubmit={handleSignin} className="space-y-4">
@@ -301,7 +264,7 @@ const SignIn = () => {
                       type="submit"
                       className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
                     >
-                      {userType === "customer" ? "Sign In" : "Sign In as Delivery Agent"}
+                      Sign In
                     </Button>
                   </form>
                 </TabsContent>

@@ -8,7 +8,6 @@ import ProductGallery from "@/components/ProductGallery";
 
 const Menu = () => {
   const [activeCategory, setActiveCategory] = useState('all');
-  const [cardStyle, setCardStyle] = useState<"default" | "modern" | "minimal" | "detailed">("detailed");
   
   const filteredItems = activeCategory === 'all' 
     ? menuItems 
@@ -41,7 +40,7 @@ const Menu = () => {
               title="" 
               initialProducts={filteredItems}
               showNutrition={true}
-              cardStyle={cardStyle}
+              cardStyle="detailed"
             />
           </div>
         </section>
