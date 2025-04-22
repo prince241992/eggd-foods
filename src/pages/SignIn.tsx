@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { EyeIcon, EyeOffIcon, Mail, Lock, User, Phone, ArrowRight, CheckCircle2, Calendar } from "lucide-react";
@@ -8,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -173,6 +173,67 @@ const SignIn = () => {
     });
     
     navigate("/account");
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/account`
+        }
+      });
+      
+      if (error) throw error;
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handlePhoneSignIn = async (phone: string) => {
+    try {
+      const { error } = await supabase.auth.signInWithOtp({
+        phone: phone,
+      });
+      
+      if (error) throw error;
+      
+      setOtpSent(true);
+      toast({
+        title: "OTP Sent",
+        description: `A verification code has been sent to ${phone}`,
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive"
+      });
+    }
+  };
+
+  const verifyOTP = async (phone: string, otp: string) => {
+    try {
+      const { error } = await supabase.auth.verifyOtp({
+        phone: phone,
+        token: otp,
+        type: 'sms'
+      });
+      
+      if (error) throw error;
+      
+      navigate("/account");
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive"
+      });
+    }
   };
   
   return (
