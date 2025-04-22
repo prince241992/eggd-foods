@@ -12,13 +12,15 @@ interface ProductCardProps {
   selectedAddOns: Record<number, string[]>;
   onAddOnToggle: (productId: number, addOnName: string) => void;
   showNutrition?: boolean;
+  cardStyle?: "default" | "modern" | "minimal" | "detailed";
 }
 
 const ProductCard = ({
   product,
   selectedAddOns,
   onAddOnToggle,
-  showNutrition = false
+  showNutrition = false,
+  cardStyle = "detailed"
 }: ProductCardProps) => {
   const { toast } = useToast();
 

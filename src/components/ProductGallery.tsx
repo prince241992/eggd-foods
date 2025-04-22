@@ -10,6 +10,7 @@ interface ProductGalleryProps {
   description?: string;
   initialProducts?: Product[];
   showNutrition?: boolean;
+  cardStyle?: "default" | "modern" | "minimal" | "detailed";
 }
 
 const ProductGallery = ({
@@ -17,6 +18,7 @@ const ProductGallery = ({
   description,
   initialProducts = [],
   showNutrition = false,
+  cardStyle = "default",
 }: ProductGalleryProps) => {
   const {
     currentProducts,
@@ -54,6 +56,7 @@ const ProductGallery = ({
                 selectedAddOns={selectedAddOns}
                 onAddOnToggle={handleAddOnToggle}
                 showNutrition={showNutrition}
+                cardStyle={cardStyle}
               />
             </div>
           ))}
