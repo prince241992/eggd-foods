@@ -16,6 +16,7 @@ import DeliveryDashboard from "./pages/DeliveryDashboard";
 import OrderTracking from "./pages/OrderTracking";
 import NotFound from "./pages/NotFound";
 import DeliveryAgentSignIn from "./pages/DeliveryAgentSignIn";
+import Products from "./pages/Products";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +38,7 @@ const App = () => (
             <Route path="/delivery-signin" element={<DeliveryAgentSignIn />} />
             <Route path="/delivery-dashboard" element={<DeliveryDashboard />} />
             <Route path="/track-order" element={<OrderTracking />} />
+            <Route path="/products" element={<Products />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <CartButton />

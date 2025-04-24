@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ShoppingCart, X, ChevronRight, Plus, Minus, Clock, CreditCard, MapPin, AlertCircle, Check } from "lucide-react";
@@ -9,6 +8,9 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { cartItems } from "@/components/menu/ProductList";
+import { useCart } from '@/hooks/useCart';
+import { useAuth } from '@/contexts/AuthContext';
+import { OrderService } from '@/services/OrderService';
 
 // Sample order bump items for demonstration
 const orderBumpItems = [
@@ -49,6 +51,8 @@ interface OrderBump {
 }
 
 const CartButton = () => {
+  const { items, removeItem, updateQuantity, clearCart, getTotal } = useCart();
+  const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [currentCartItems, setCurrentCartItems] = useState<CartItem[]>([]);
   const [selectedOrderBumps, setSelectedOrderBumps] = useState<number[]>([]);
@@ -83,7 +87,35 @@ const CartButton = () => {
     };
   }, []);
 
-  const updateQuantity = (id: number, newQuantity: number) => {
+  const handleCheckout = async () => {
+    if (!user) {
+      toast({
+        title: "Please sign in",
+        description: "You need to be signed in to checkout",
+        variant: "destructive"
+      });
+      navigate('/signin');
+      return;
+    }
+
+    try {
+      const order = await OrderService.createOrder(items, user.id);
+      clearCart();
+      toast({
+        title: "Order placed successfully",
+        description: "Thank you for your order!",
+      });
+      navigate('/account');
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Could not place your order. Please try again.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const updateQuantityOld = (id: number, newQuantity: number) => {
     if (newQuantity < 1) return;
     
     if (cartItems.has(id)) {
@@ -94,7 +126,7 @@ const CartButton = () => {
     }
   };
 
-  const removeItem = (id: number) => {
+  const removeItemOld = (id: number) => {
     cartItems.delete(id);
     updateCartFromGlobal();
     
@@ -182,7 +214,7 @@ const CartButton = () => {
     }
   };
 
-  const handleCheckout = () => {
+  const handleCheckoutOld = () => {
     // Add any order bumps to cart before checkout
     if (selectedOrderBumps.length > 0) {
       const orderBumpsToAdd = orderBumpItems
@@ -224,18 +256,18 @@ const CartButton = () => {
       </div>
       <div className="flex items-center">
         <div className="flex items-center mr-4 text-sm">
-          <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="text-gray-400 hover:text-black bg-white rounded-full w-5 h-5 flex items-center justify-center">
+          <button onClick={() => updateQuantityOld(item.id, item.quantity - 1)} className="text-gray-400 hover:text-black bg-white rounded-full w-5 h-5 flex items-center justify-center">
             <Minus size={12} />
           </button>
           <span className="mx-2 w-4 text-center">{item.quantity}</span>
-          <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="text-gray-400 hover:text-black bg-white rounded-full w-5 h-5 flex items-center justify-center">
+          <button onClick={() => updateQuantityOld(item.id, item.quantity + 1)} className="text-gray-400 hover:text-black bg-white rounded-full w-5 h-5 flex items-center justify-center">
             <Plus size={12} />
           </button>
         </div>
         <div className="flex items-center">
           <p className="font-medium text-sm mr-2">{item.price}</p>
           <button 
-            onClick={() => removeItem(item.id)}
+            onClick={() => removeItemOld(item.id)}
             className="text-gray-400 hover:text-red-500 bg-white rounded-full w-5 h-5 flex items-center justify-center"
           >
             <X size={10} />
