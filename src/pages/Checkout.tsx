@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -11,26 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import BranchSelector from "@/components/BranchSelector";
 import OrderInvoice from "@/components/OrderInvoice";
-
-// Sample cart items
-const cartItems = [
-  {
-    id: 1,
-    name: "Classic Shakshuka",
-    price: "₹12.99",
-    quantity: 1,
-    image: "https://images.unsplash.com/photo-1590412200988-a436970781fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80",
-    addOns: [{ name: "Extra cheese", price: "₹2.50" }]
-  },
-  {
-    id: 3,
-    name: "Egg Fried Rice",
-    price: "₹10.99",
-    quantity: 2,
-    image: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1925&q=80",
-    addOns: []
-  }
-];
+import { useCart } from '@/hooks/useCart';
 
 const deliveryTimeSlots = [
   { id: 1, time: "ASAP (30-45 min)" },
@@ -41,6 +21,7 @@ const deliveryTimeSlots = [
 ];
 
 const Checkout = () => {
+  const { items, getTotal } = useCart();
   const [step, setStep] = useState(1);
   const [orderType, setOrderType] = useState<'delivery' | 'pickup'>('delivery');
   const [selectedBranch, setSelectedBranch] = useState(1);
@@ -61,19 +42,26 @@ const Checkout = () => {
     instructions: ""
   });
 
+  useEffect(() => {
+    if (items.length === 0) {
+      toast({
+        title: "Empty Cart",
+        description: "Your cart is empty. Please add items before checkout.",
+        variant: "destructive"
+      });
+      navigate('/menu');
+    }
+  }, [items.length, navigate]);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormFields(prev => ({ ...prev, [name]: value }));
   };
   
   // Calculate order totals
-  const subtotal = cartItems.reduce((sum, item) => {
-    const price = parseFloat(item.price.replace('₹', ''));
-    const addonTotal = item.addOns?.reduce(
-      (total, addon) => total + parseFloat(addon.price.replace('₹', '')), 
-      0
-    ) || 0;
-    return sum + ((price + addonTotal) * item.quantity);
+  const subtotal = items.reduce((sum, item) => {
+    const price = parseFloat(String(item.price));
+    return sum + (price * item.quantity);
   }, 0);
   
   const deliveryFee = orderType === 'delivery' ? 2.99 : 0;
@@ -433,7 +421,7 @@ const Checkout = () => {
                   <div className="bg-white rounded-lg shadow-sm p-6 sticky top-6">
                     <h2 className="text-lg font-semibold mb-4">Order Summary</h2>
                     
-                    {cartItems.map(item => (
+                    {items.map(item => (
                       <div key={item.id} className="flex mb-4 pb-4 border-b">
                         <img 
                           src={item.image} 
@@ -443,19 +431,9 @@ const Checkout = () => {
                         <div className="ml-4 flex-1">
                           <div className="flex justify-between">
                             <h4 className="font-medium">{item.name}</h4>
-                            <span>₹{(parseFloat(item.price.replace('₹', '')) * item.quantity).toFixed(2)}</span>
+                            <span>₹{(item.price * item.quantity).toFixed(2)}</span>
                           </div>
                           <div className="text-gray-500 text-sm">Qty: {item.quantity}</div>
-                          {item.addOns && item.addOns.length > 0 && (
-                            <div className="text-gray-500 text-xs mt-1">
-                              {item.addOns.map((addon, idx) => (
-                                <div key={idx} className="flex justify-between">
-                                  <span>+ {addon.name}</span>
-                                  <span>₹{(parseFloat(addon.price.replace('₹', '')) * item.quantity).toFixed(2)}</span>
-                                </div>
-                              ))}
-                            </div>
-                          )}
                         </div>
                       </div>
                     ))}
@@ -463,7 +441,7 @@ const Checkout = () => {
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
                         <span className="text-gray-600">Subtotal</span>
-                        <span>₹{subtotal.toFixed(2)}</span>
+                        <span>₹{getTotal().toFixed(2)}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-600">
@@ -484,12 +462,12 @@ const Checkout = () => {
             <OrderInvoice
               orderNumber={`EGD${Math.floor(1000 + Math.random() * 9000)}`}
               date={new Date().toLocaleDateString()}
-              items={cartItems.map(item => ({
+              items={items.map(item => ({
                 id: item.id,
                 name: item.name,
                 price: item.price,
                 quantity: item.quantity,
-                addOns: item.addOns
+                addOns: []
               }))}
               customerName={formFields.name}
               customerAddress={formFields.address}
