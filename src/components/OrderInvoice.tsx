@@ -168,6 +168,15 @@ const OrderInvoice = ({
     });
   };
 
+  // Helper function to safely extract price value
+  const extractPrice = (priceValue: string | number): number => {
+    if (typeof priceValue === 'number') {
+      return priceValue;
+    }
+    // Handle string price (remove currency symbol if present)
+    return parseFloat(priceValue.replace(/[^\d.-]/g, ''));
+  };
+
   return (
     <Card className="w-full max-w-3xl mx-auto">
       <CardHeader className="flex flex-row justify-between items-center">
@@ -321,9 +330,9 @@ const OrderInvoice = ({
                   <tr>
                     <td>{item.name}</td>
                     <td className="text-center">{item.quantity}</td>
-                    <td className="text-right">{item.price}</td>
+                    <td className="text-right">{typeof item.price === 'number' ? `₹${item.price.toFixed(2)}` : item.price}</td>
                     <td className="text-right">
-                      ₹{(parseFloat(item.price.replace('₹', '')) * item.quantity).toFixed(2)}
+                      ₹{(extractPrice(item.price) * item.quantity).toFixed(2)}
                     </td>
                   </tr>
                   {item.addOns && item.addOns.length > 0 && (
