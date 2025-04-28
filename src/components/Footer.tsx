@@ -1,4 +1,3 @@
-
 import { Facebook, Instagram, Twitter } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -46,12 +45,15 @@ const Footer = () => {
           
           <div>
             <h4 className="font-semibold text-gray-800 mb-4">Contact</h4>
-            <address className="not-italic text-gray-600">
-              <p>Near Radission Hotel</p>
-              <p>Vijaynagar, Indore</p>
-              <p className="mt-2">Email: contactus@eggsfoods.com</p>
-              <p>Phone: 9898116290</p>
-            </address>
+            <div className="text-gray-600">
+              <h5 className="font-display text-lg bg-gradient-to-r from-purple-600 to-pink-500 text-transparent bg-clip-text mb-2">Egg'd Foods</h5>
+              <address className="not-italic">
+                <p>Near Radission Hotel</p>
+                <p>Vijaynagar, Indore</p>
+                <p className="mt-2">Email: contactus@eggsfoods.com</p>
+                <p>Phone: 9898116290</p>
+              </address>
+            </div>
           </div>
         </div>
         

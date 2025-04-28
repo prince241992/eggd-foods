@@ -12,7 +12,6 @@ import { useCart } from '@/hooks/useCart';
 import { useAuth } from '@/contexts/AuthContext';
 import { OrderService } from '@/services/OrderService';
 
-// Sample order bump items for demonstration
 const orderBumpItems = [
   {
     id: 101,
@@ -63,7 +62,6 @@ const CartButton = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  // Update local cart state from global cartItems
   const updateCartFromGlobal = () => {
     const items: CartItem[] = [];
     cartItems.forEach((item) => {
@@ -72,7 +70,6 @@ const CartButton = () => {
     setCurrentCartItems(items);
   };
 
-  // Listen for cart updates
   useEffect(() => {
     updateCartFromGlobal();
     
@@ -137,38 +134,25 @@ const CartButton = () => {
     });
   };
 
-  // Calculate total items and cost
   const totalItems = currentCartItems.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = currentCartItems.reduce((sum, item) => {
-    const price = parseFloat(item.price.replace('₹', ''));
-    return sum + (price * item.quantity);
+    return sum + calculateItemTotal(item);
   }, 0);
-  
-  // Calculate order bump total
-  const orderBumpTotal = selectedOrderBumps.reduce((sum, bumpId) => {
-    const bump = orderBumpItems.find(item => item.id === bumpId);
-    return bump ? sum + parseFloat(bump.price.replace('₹', '')) : sum;
-  }, 0);
-  
-  // Check if minimum order amount is met
-  const minimumOrderAmount = 150.00;
-  const isMinimumMet = subtotal >= minimumOrderAmount;
-  
-  // Calculate delivery fee based on distance
-  const calculateDeliveryFee = () => {
-    if (deliveryType === 'pickup') return 0;
+
+  const calculateItemTotal = (item: CartItem) => {
+    let total = parseFloat(item.price.toString()) * item.quantity;
     
-    // Default delivery fee for within 5km
-    let deliveryFee = 60;
-    
-    // If we know the distance and it's between 5-10km
-    if (deliveryDistance !== null && deliveryDistance > 5 && deliveryDistance <= 10) {
-      deliveryFee = 85;
+    if (item.addOns && Array.isArray(item.addOns)) {
+      item.addOns.forEach(addon => {
+        if (typeof addon === 'object' && addon.price) {
+          total += parseFloat(addon.price.toString().replace('₹', ''));
+        }
+      });
     }
     
-    return deliveryFee;
+    return total;
   };
-  
+
   const shippingFee = calculateDeliveryFee();
 
   const toggleOrderBump = (id: number) => {
@@ -178,17 +162,16 @@ const CartButton = () => {
       setSelectedOrderBumps([...selectedOrderBumps, id]);
     }
   };
-  
+
   const validateZipCode = () => {
-    // Simulating ZIP code validation with distance estimation
     const validZipCodes = {
-      "452001": 2.5, // 2.5 km from restaurant
-      "452002": 3.8, // 3.8 km from restaurant
-      "452003": 5.2, // 5.2 km from restaurant
-      "452004": 7.1, // 7.1 km from restaurant
-      "452005": 8.9, // 8.9 km from restaurant
-      "452006": 4.3, // 4.3 km from restaurant
-      "452007": 9.5  // 9.5 km from restaurant
+      "452001": 2.5,
+      "452002": 3.8,
+      "452003": 5.2,
+      "452004": 7.1,
+      "452005": 8.9,
+      "452006": 4.3,
+      "452007": 9.5
     };
     
     const isValid = zipCode in validZipCodes;
@@ -215,7 +198,6 @@ const CartButton = () => {
   };
 
   const handleCheckoutOld = () => {
-    // Add any order bumps to cart before checkout
     if (selectedOrderBumps.length > 0) {
       const orderBumpsToAdd = orderBumpItems
         .filter(bump => selectedOrderBumps.includes(bump.id))
@@ -250,7 +232,13 @@ const CartButton = () => {
         <div>
           <h3 className="text-sm font-medium">{item.name}</h3>
           <p className="text-xs text-gray-500">
-            {item.addOns && item.addOns.length > 0 ? `+ ${item.addOns.join(', ')}` : ''}
+            {item.addOns && Array.isArray(item.addOns) 
+              ? item.addOns.map(addon => 
+                  typeof addon === 'string' 
+                    ? addon 
+                    : `${addon.name} (₹${addon.price})`
+                ).join(', ')
+              : ''}
           </p>
         </div>
       </div>
@@ -276,6 +264,20 @@ const CartButton = () => {
       </div>
     </div>
   );
+
+  const calculateDeliveryFee = () => {
+    if (deliveryType === 'pickup') return 0;
+    
+    let deliveryFee = 60;
+    
+    if (deliveryDistance !== null && deliveryDistance > 5 && deliveryDistance <= 10) {
+      deliveryFee = 85;
+    }
+    
+    return deliveryFee;
+  };
+
+  const minimumOrderAmount = 299.00;
 
   return (
     <>
@@ -314,7 +316,6 @@ const CartButton = () => {
               <div className="space-y-4">
                 {currentCartItems.map(item => renderCartItemCompact(item))}
                 
-                {/* Order Bumps Section */}
                 {orderBumpItems.length > 0 && (
                   <div className="mt-6 border-t pt-4">
                     <h3 className="font-medium mb-3 bg-gradient-to-r from-purple-600 to-pink-500 text-transparent bg-clip-text">Recommended Add-ons</h3>
@@ -367,7 +368,6 @@ const CartButton = () => {
                   </div>
                 )}
                 
-                {/* Delivery Type Selection */}
                 <div className="mt-6 border-t pt-4">
                   <h3 className="font-medium mb-3 bg-gradient-to-r from-purple-600 to-pink-500 text-transparent bg-clip-text">Delivery Options</h3>
                   <RadioGroup value={deliveryType} onValueChange={(value) => setDeliveryType(value as "delivery" | "pickup")}>
@@ -481,10 +481,6 @@ const CartButton = () => {
                 
                 <div className="text-xs text-gray-500 mt-1">
                   <p className="flex items-center gap-1">
-                    <Clock size={14} className="text-pink-500" />
-                    Cash on Delivery available from 11 AM to 3 AM
-                  </p>
-                  <p className="flex items-center gap-1 mt-0.5">
                     <CreditCard size={14} className="text-pink-500" />
                     We accept Credit Card, Debit Card, UPI, and Cash
                   </p>

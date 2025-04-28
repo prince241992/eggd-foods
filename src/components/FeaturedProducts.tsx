@@ -1,8 +1,6 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProductCard from './ProductCard';
-import ProductCardAlternate from './ProductCardAlternate';
 import { Button } from '@/components/ui/button';
 import { useToast } from "@/hooks/use-toast";
 
@@ -134,7 +132,6 @@ const products = [
 
 const FeaturedProducts = () => {
   const [activeCategory, setActiveCategory] = useState('all');
-  const [cardStyle, setCardStyle] = useState<'original' | 'modern' | 'minimal' | 'detailed'>('original');
   const navigate = useNavigate();
   const { toast } = useToast();
   
@@ -146,15 +143,6 @@ const FeaturedProducts = () => {
     navigate('/menu');
   };
 
-  const handleOrderNow = () => {
-    toast({
-      title: "Order Started",
-      description: "Taking you to our full menu to continue",
-      duration: 2000,
-    });
-    navigate('/menu');
-  };
-  
   return (
     <section className="py-16 bg-cream-50">
       <div className="container-custom">
@@ -179,71 +167,18 @@ const FeaturedProducts = () => {
               </button>
             ))}
           </div>
-          
-          <div className="flex flex-wrap justify-center gap-2 mt-4">
-            <span className="text-sm text-gray-500 mr-2 self-center">Card Style:</span>
-            {[
-              { id: 'original', name: 'Original' },
-              { id: 'modern', name: 'Modern' },
-              { id: 'minimal', name: 'Minimal' },
-              { id: 'detailed', name: 'Detailed' }
-            ].map(style => (
-              <button
-                key={style.id}
-                className={`px-3 py-1 text-sm rounded-full transition-all duration-300 ${
-                  cardStyle === style.id
-                    ? 'bg-sweet-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-                onClick={() => setCardStyle(style.id as any)}
-              >
-                {style.name}
-              </button>
-            ))}
-          </div>
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {filteredProducts.map(product => {
-            // Show original ProductCard
-            if (cardStyle === 'original') {
-              return (
-                <ProductCard
-                  key={product.id}
-                  name={product.name}
-                  description={product.description}
-                  price={product.price}
-                  image={product.image}
-                  popular={product.popular}
-                  addOns={[
-                    { name: "Extra cheese", price: "₹2.50" },
-                    { name: "Premium toppings", price: "₹3.50" },
-                    { name: "Gluten-free option", price: "₹1.50" }
-                  ]}
-                />
-              );
-            }
-            
-            // Show alternate ProductCard styles
-            return (
-              <ProductCardAlternate
-                key={product.id}
-                name={product.name}
-                description={product.description}
-                price={product.price}
-                image={product.image}
-                popular={product.popular}
-                style={cardStyle as any}
-                showNutrition={cardStyle === 'detailed'}
-                nutritionInfo={product.nutritionInfo}
-                addOns={[
-                  { name: "Extra cheese", price: "₹2.50" },
-                  { name: "Premium toppings", price: "₹3.50" },
-                  { name: "Gluten-free option", price: "₹1.50" }
-                ]}
-              />
-            );
-          })}
+          {filteredProducts.map(product => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              showNutrition={false}
+              selectedAddOns={{}}
+              onAddOnToggle={() => {}}
+            />
+          ))}
         </div>
         
         <div className="text-center mt-12">
