@@ -31,7 +31,6 @@ const Checkout = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   
-  // Form fields
   const [formFields, setFormFields] = useState({
     name: "",
     email: "",
@@ -58,7 +57,6 @@ const Checkout = () => {
     setFormFields(prev => ({ ...prev, [name]: value }));
   };
   
-  // Calculate order totals
   const subtotal = items.reduce((sum, item) => {
     const price = parseFloat(String(item.price));
     return sum + (price * item.quantity);
@@ -89,7 +87,6 @@ const Checkout = () => {
     } else if (step === 2) {
       setStep(3);
     } else if (step === 3) {
-      // Place order
       toast({
         title: "Order Placed Successfully!",
         description: `Your order #EGD${Math.floor(1000 + Math.random() * 9000)} has been placed.`,
@@ -135,7 +132,6 @@ const Checkout = () => {
                       </div>
                     </div>
 
-                    {/* Step 1: Delivery Details */}
                     {step === 1 && (
                       <div className="space-y-6">
                         <Tabs 
@@ -297,7 +293,6 @@ const Checkout = () => {
                       </div>
                     )}
 
-                    {/* Step 2: Delivery Time */}
                     {step === 2 && (
                       <div>
                         <div className="flex items-center mb-4 text-gray-600">
@@ -337,7 +332,6 @@ const Checkout = () => {
                       </div>
                     )}
 
-                    {/* Step 3: Payment Method */}
                     {step === 3 && (
                       <div>
                         <Tabs 
@@ -465,7 +459,7 @@ const Checkout = () => {
               items={items.map(item => ({
                 id: item.id,
                 name: item.name,
-                price: item.price,
+                price: `₹${item.price.toFixed(2)}`,
                 quantity: item.quantity,
                 addOns: []
               }))}

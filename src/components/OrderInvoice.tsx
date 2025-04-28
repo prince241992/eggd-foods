@@ -15,9 +15,9 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 
 interface InvoiceItem {
-  id: number;
+  id: string | number; // Modified to accept both string and number types
   name: string;
-  price: string;
+  price: string | number; // Modified to accept both string and number types
   quantity: number;
   addOns?: { name: string; price: string }[];
 }
