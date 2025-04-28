@@ -1,8 +1,9 @@
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ProductCard from './ProductCard';
 import { Button } from '@/components/ui/button';
 import { useToast } from "@/hooks/use-toast";
+import ProductCardAlternate from './ProductCardAlternate';
 
 const categories = [
   { id: 'all', name: 'All Items' },
@@ -171,12 +172,17 @@ const FeaturedProducts = () => {
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {filteredProducts.map(product => (
-            <ProductCard
+            <ProductCardAlternate
               key={product.id}
-              product={product}
+              name={product.name}
+              description={product.description}
+              price={product.price}
+              image={product.image}
+              popular={product.popular}
               showNutrition={false}
-              selectedAddOns={{}}
-              onAddOnToggle={() => {}}
+              nutritionInfo={product.nutritionInfo}
+              className=""
+              style="modern"
             />
           ))}
         </div>

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ShoppingCart, X, ChevronRight, Plus, Minus, Clock, CreditCard, MapPin, AlertCircle, Check } from "lucide-react";
@@ -37,7 +38,7 @@ interface CartItem {
   price: string;
   quantity: number;
   image: string;
-  addOns: string[];
+  addOns: Array<{name: string; price: string} | string>;
 }
 
 interface OrderBump {
@@ -59,8 +60,36 @@ const CartButton = () => {
   const [zipCode, setZipCode] = useState("");
   const [zipCodeValid, setZipCodeValid] = useState<boolean | null>(null);
   const [deliveryDistance, setDeliveryDistance] = useState<number | null>(null);
+  const [orderBumpTotal, setOrderBumpTotal] = useState(0);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const minimumOrderAmount = 299.00;
+
+  const calculateDeliveryFee = () => {
+    if (deliveryType === 'pickup') return 0;
+    
+    let deliveryFee = 60;
+    
+    if (deliveryDistance !== null && deliveryDistance > 5 && deliveryDistance <= 10) {
+      deliveryFee = 85;
+    }
+    
+    return deliveryFee;
+  };
+
+  const calculateItemTotal = (item: CartItem) => {
+    let total = parseFloat(item.price.replace('₹', ''));
+    
+    if (item.addOns && Array.isArray(item.addOns)) {
+      item.addOns.forEach(addon => {
+        if (typeof addon === 'object' && addon !== null && 'price' in addon) {
+          total += parseFloat(addon.price.toString().replace('₹', ''));
+        }
+      });
+    }
+    
+    return total * item.quantity;
+  };
 
   const updateCartFromGlobal = () => {
     const items: CartItem[] = [];
@@ -83,6 +112,22 @@ const CartButton = () => {
       window.removeEventListener('cart-updated', handleCartUpdate);
     };
   }, []);
+
+  useEffect(() => {
+    // Calculate order bump total
+    if (selectedOrderBumps.length > 0) {
+      const total = selectedOrderBumps.reduce((sum, bumpId) => {
+        const bump = orderBumpItems.find(item => item.id === bumpId);
+        if (bump) {
+          return sum + parseFloat(bump.price.replace('₹', ''));
+        }
+        return sum;
+      }, 0);
+      setOrderBumpTotal(total);
+    } else {
+      setOrderBumpTotal(0);
+    }
+  }, [selectedOrderBumps]);
 
   const handleCheckout = async () => {
     if (!user) {
@@ -117,9 +162,11 @@ const CartButton = () => {
     
     if (cartItems.has(id)) {
       const item = cartItems.get(id);
-      item.quantity = newQuantity;
-      cartItems.set(id, item);
-      updateCartFromGlobal();
+      if (item) {
+        item.quantity = newQuantity;
+        cartItems.set(id, item);
+        updateCartFromGlobal();
+      }
     }
   };
 
@@ -139,21 +186,8 @@ const CartButton = () => {
     return sum + calculateItemTotal(item);
   }, 0);
 
-  const calculateItemTotal = (item: CartItem) => {
-    let total = parseFloat(item.price.toString()) * item.quantity;
-    
-    if (item.addOns && Array.isArray(item.addOns)) {
-      item.addOns.forEach(addon => {
-        if (typeof addon === 'object' && addon.price) {
-          total += parseFloat(addon.price.toString().replace('₹', ''));
-        }
-      });
-    }
-    
-    return total;
-  };
-
   const shippingFee = calculateDeliveryFee();
+  const isMinimumMet = subtotal >= minimumOrderAmount;
 
   const toggleOrderBump = (id: number) => {
     if (selectedOrderBumps.includes(id)) {
@@ -236,7 +270,9 @@ const CartButton = () => {
               ? item.addOns.map(addon => 
                   typeof addon === 'string' 
                     ? addon 
-                    : `${addon.name} (₹${addon.price})`
+                    : addon && 'name' in addon && 'price' in addon
+                      ? `${addon.name} (${addon.price})`
+                      : ''
                 ).join(', ')
               : ''}
           </p>
@@ -264,20 +300,6 @@ const CartButton = () => {
       </div>
     </div>
   );
-
-  const calculateDeliveryFee = () => {
-    if (deliveryType === 'pickup') return 0;
-    
-    let deliveryFee = 60;
-    
-    if (deliveryDistance !== null && deliveryDistance > 5 && deliveryDistance <= 10) {
-      deliveryFee = 85;
-    }
-    
-    return deliveryFee;
-  };
-
-  const minimumOrderAmount = 299.00;
 
   return (
     <>
