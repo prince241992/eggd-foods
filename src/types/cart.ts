@@ -5,6 +5,7 @@ export interface CartItem {
   price: number;
   quantity: number;
   image?: string;
+  addOns?: Array<string | {name: string; price: string | number}>;
 }
 
 export interface OrderItem extends CartItem {

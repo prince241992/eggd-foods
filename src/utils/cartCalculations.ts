@@ -1,4 +1,6 @@
 
+import { CartItem } from '@/types/cart';
+
 export const calculateDeliveryFee = (deliveryType: 'delivery' | 'pickup', distance: number | null) => {
   if (deliveryType === 'pickup') return 0;
   
@@ -42,4 +44,3 @@ export const validateZipCode = (zipCode: string): {
   
   return { isValid, distance, fee };
 };
-

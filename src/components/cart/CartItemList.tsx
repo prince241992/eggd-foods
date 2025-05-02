@@ -1,5 +1,6 @@
 
 import { Minus, Plus, X } from "lucide-react";
+import { CartItem } from "@/types/cart";
 
 interface CartItemProps {
   item: CartItem;
