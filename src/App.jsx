@@ -1,9 +1,11 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
+import axios from "axios";
 import CartButton from "./components/CartButton";
 import Index from "./pages/Index";
 import Menu from "./pages/Menu";
@@ -17,6 +19,54 @@ import OrderTracking from "./pages/OrderTracking";
 import NotFound from "./pages/NotFound";
 import DeliveryAgentSignIn from "./pages/DeliveryAgentSignIn";
 import Products from "./pages/Products";
+
+// Configure axios defaults
+axios.defaults.baseURL = 'https://api.example.com';
+axios.defaults.headers.common['Content-Type'] = 'application/json';
+
+// Create axios instances for different API endpoints
+export const authAPI = axios.create({
+  baseURL: 'https://api.example.com/auth',
+  timeout: 10000,
+});
+
+export const orderAPI = axios.create({
+  baseURL: 'https://api.example.com/orders',
+  timeout: 10000,
+});
+
+export const productAPI = axios.create({
+  baseURL: 'https://api.example.com/products',
+  timeout: 10000,
+});
+
+// HTTP request interceptor
+axios.interceptors.request.use(
+  config => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  }
+);
+
+// HTTP response interceptor
+axios.interceptors.response.use(
+  response => {
+    return response;
+  },
+  error => {
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem('authToken');
+      window.location.href = '/signin';
+    }
+    return Promise.reject(error);
+  }
+);
 
 const queryClient = new QueryClient();
 
